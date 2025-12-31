@@ -173,6 +173,63 @@
         }
         .hero-cta:hover { box-shadow: 0 0 30px var(--cyan-glow), 0 10px 40px rgba(0, 212, 255, 0.2); transform: translateY(-3px); }
 
+        /* SIGNUP FORMS */
+        .signup-section {
+            margin: 48px 0;
+            padding: 32px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            opacity: 0; transform: translateY(20px);
+            animation: fadeInUp 0.5s var(--ease-out-expo) 1.3s forwards;
+        }
+        .signup-title {
+            font-size: 0.9rem; font-weight: 600; color: var(--text-bright);
+            margin-bottom: 8px; display: flex; align-items: center; gap: 8px;
+        }
+        .signup-title::before { content: '▸'; color: var(--cyan); }
+        .signup-text {
+            font-size: 0.8rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.7;
+        }
+        .signup-form {
+            display: flex; gap: 12px; flex-wrap: wrap;
+        }
+        .signup-input {
+            flex: 1; min-width: 200px;
+            padding: 12px 16px;
+            background: var(--bg-deep);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            outline: none;
+            transition: all 0.2s var(--ease-out-cubic);
+        }
+        .signup-input::placeholder { color: var(--text-dim); }
+        .signup-input:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px var(--cyan-glow); }
+        .signup-button {
+            padding: 12px 24px;
+            background: var(--cyan);
+            border: none;
+            color: var(--bg-deep);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s var(--ease-out-cubic);
+        }
+        .signup-button:hover { box-shadow: 0 0 20px var(--cyan-glow); transform: translateY(-2px); }
+        .signup-button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .signup-success {
+            display: none;
+            padding: 12px 16px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--pass);
+            color: var(--pass);
+            font-size: 0.85rem;
+        }
+        .signup-form.submitted { display: none; }
+        .signup-form.submitted + .signup-success { display: block; }
+
         /* TERMINAL */
         .terminal {
             background: var(--bg-surface); border: 1px solid var(--border);
@@ -447,16 +504,37 @@
         .cta-button.secondary:hover { border-color: var(--cyan); color: var(--cyan); transform: translateY(-2px); }
 
         /* FOOTER */
-        footer { border-top: 1px solid var(--border); padding: 48px 24px; max-width: 1000px; margin: 0 auto; }
-        .footer-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px; }
+        footer { border-top: 1px solid var(--border); padding: 64px 24px 48px; max-width: 1000px; margin: 0 auto; }
+        .footer-top { display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 48px; margin-bottom: 48px; }
+        .footer-column h4 { font-size: 0.7rem; letter-spacing: 0.15em; color: var(--text-dim); text-transform: uppercase; margin-bottom: 16px; }
+        .footer-column a { display: block; color: var(--text-muted); text-decoration: none; font-size: 0.8rem; margin-bottom: 10px; transition: color 0.2s; }
+        .footer-column a:hover { color: var(--cyan); }
+        .footer-column a.investor-link { color: var(--orange); }
+        .footer-column a.investor-link:hover { color: var(--cyan); }
+        .footer-signup { padding: 24px; background: var(--bg-surface); border: 1px solid var(--border); }
+        .footer-signup-title { font-size: 0.85rem; font-weight: 600; color: var(--text-bright); margin-bottom: 6px; }
+        .footer-signup-text { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 16px; }
+        .footer-signup-form { display: flex; gap: 8px; }
+        .footer-signup-input {
+            flex: 1; padding: 10px 12px; background: var(--bg-deep); border: 1px solid var(--border);
+            color: var(--text-primary); font-family: var(--font-mono); font-size: 0.8rem; outline: none;
+            transition: all 0.2s var(--ease-out-cubic);
+        }
+        .footer-signup-input::placeholder { color: var(--text-dim); }
+        .footer-signup-input:focus { border-color: var(--cyan); }
+        .footer-signup-button {
+            padding: 10px 16px; background: var(--cyan); border: none; color: var(--bg-deep);
+            font-family: var(--font-mono); font-size: 0.8rem; font-weight: 600; cursor: pointer;
+            transition: all 0.2s var(--ease-out-cubic); white-space: nowrap;
+        }
+        .footer-signup-button:hover { box-shadow: 0 0 15px var(--cyan-glow); }
+        .footer-signup-success { display: none; color: var(--pass); font-size: 0.8rem; padding: 10px 0; }
+        .footer-signup-form.submitted { display: none; }
+        .footer-signup-form.submitted + .footer-signup-success { display: block; }
+        .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 24px; border-top: 1px solid var(--border); }
         .footer-logo { color: var(--cyan); font-weight: 600; text-decoration: none; transition: text-shadow 0.3s; }
         .footer-logo:hover { text-shadow: 0 0 20px var(--cyan-glow); }
-        .footer-links { display: flex; gap: 24px; }
-        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.8rem; transition: color 0.2s; }
-        .footer-links a:hover { color: var(--cyan); }
         .footer-meta { font-size: 0.75rem; color: var(--text-dim); }
-        .footer-meta a { color: var(--orange); text-decoration: none; transition: color 0.2s; }
-        .footer-meta a:hover { color: var(--cyan); }
 
         /* RESPONSIVE */
         @media (min-width: 1024px) {
@@ -474,13 +552,20 @@
             .hero-badges { flex-direction: column; gap: 12px; }
             .badge { justify-content: center; }
             .hero-cta { width: 100%; justify-content: center; }
+            .signup-section { padding: 24px; margin: 32px 0; }
+            .signup-form { flex-direction: column; }
+            .signup-input { min-width: 100%; }
+            .signup-button { width: 100%; }
             .terminal-body { padding: 16px; font-size: 0.75rem; }
             .terminal-line { flex-wrap: wrap; }
             .philosophy { padding: 32px 20px; }
             .philosophy-title { font-size: 1.3rem; letter-spacing: 0.15em; }
             .philosophy-list { padding-left: 0; }
-            .footer-content { flex-direction: column; text-align: center; }
-            .footer-links { justify-content: center; }
+            .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+            .footer-signup { grid-column: span 2; }
+            .footer-signup-form { flex-direction: column; }
+            .footer-signup-button { width: 100%; }
+            .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
             .log-line { flex-wrap: wrap; gap: 8px; }
             .log-time { width: 100%; }
             .signal-block { padding: 20px; }
@@ -503,6 +588,9 @@
             .feature-card { padding: 20px; }
             .feature-header { font-size: 0.85rem; }
             .feature-text { font-size: 0.8rem; }
+            .footer-top { grid-template-columns: 1fr; gap: 32px; }
+            .footer-signup { grid-column: span 1; }
+            .footer-column { text-align: center; }
         }
     </style>
 </head>
@@ -533,6 +621,16 @@
             <div class="badge"><span class="badge-dot"></span><span class="badge-label">Tests</span><span class="badge-value">88/88</span></div>
             <div class="badge"><span class="badge-dot"></span><span class="badge-label">Attacks Defended</span><span class="badge-value">20/20</span></div>
             <div class="badge"><span class="badge-dot"></span><span class="badge-label">TLA+ Properties</span><span class="badge-value">5/5</span></div>
+        </div>
+        <div class="signup-section">
+            <h3 class="signup-title">Private Pilot Program</h3>
+            <p class="signup-text">We're onboarding design partners who need defensible agent deployments. Request early access.</p>
+            <form class="signup-form" id="pilot-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                <input type="hidden" name="type" value="pilot">
+                <input type="email" name="email" class="signup-input" placeholder="your@email.com" required>
+                <button type="submit" class="signup-button">Request Access</button>
+            </form>
+            <div class="signup-success">You're on the list. We'll reach out soon.</div>
         </div>
         <a href="#how-it-works" class="hero-cta">See How It Works ↓</a>
     </section>
@@ -679,15 +777,32 @@
     </section>
 
     <footer>
-        <div class="footer-content">
-            <a href="/" class="footer-logo">▸ mdash</a>
-            <div class="footer-links">
+        <div class="footer-top">
+            <div class="footer-column">
+                <h4>Product</h4>
                 <a href="/docs.html">Docs</a>
                 <a href="/simulator.html">Simulator</a>
                 <a href="/changelog.html">Changelog</a>
-                <a href="#how-it-works">How It Works</a>
                 <a href="/engineers.html">For Engineers</a>
             </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <a href="https://longarcstudios.com" target="_blank" rel="noopener">About Long Arc Studios</a>
+                <a href="mailto:kai@longarcstudios.com?subject=mdash%20Investment%20Inquiry" class="investor-link">Investors →</a>
+            </div>
+            <div class="footer-signup">
+                <h4 class="footer-signup-title">Stay Updated</h4>
+                <p class="footer-signup-text">Get notified when we launch publicly.</p>
+                <form class="footer-signup-form" id="waitlist-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                    <input type="hidden" name="type" value="waitlist">
+                    <input type="email" name="email" class="footer-signup-input" placeholder="your@email.com" required>
+                    <button type="submit" class="footer-signup-button">Join Waitlist</button>
+                </form>
+                <div class="footer-signup-success">You're in.</div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <a href="/" class="footer-logo">▸ mdash</a>
             <p class="footer-meta">Long Arc Studios · © 2025</p>
         </div>
     </footer>
@@ -729,6 +844,37 @@
                 if (href === '#') return;
                 const target = document.querySelector(href);
                 if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+            });
+        });
+
+        // Form submission handling
+        document.querySelectorAll('form[action*="formspree"]').forEach(form => {
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const button = this.querySelector('button[type="submit"]');
+                const originalText = button.textContent;
+                button.disabled = true;
+                button.textContent = 'Sending...';
+
+                try {
+                    const response = await fetch(this.action, {
+                        method: 'POST',
+                        body: new FormData(this),
+                        headers: { 'Accept': 'application/json' }
+                    });
+
+                    if (response.ok) {
+                        this.classList.add('submitted');
+                    } else {
+                        button.textContent = 'Error - Try Again';
+                        button.disabled = false;
+                        setTimeout(() => { button.textContent = originalText; }, 2000);
+                    }
+                } catch (error) {
+                    button.textContent = 'Error - Try Again';
+                    button.disabled = false;
+                    setTimeout(() => { button.textContent = originalText; }, 2000);
+                }
             });
         });
     </script>
