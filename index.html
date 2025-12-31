@@ -120,6 +120,65 @@
         }
         .nav-cta:hover { background: var(--cyan); color: var(--bg-deep) !important; box-shadow: 0 0 20px var(--cyan-glow); }
 
+        /* MOBILE NAV */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--cyan);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 8px 12px;
+            font-family: var(--font-mono);
+            transition: all 0.2s;
+            line-height: 1;
+            z-index: 1001;
+        }
+        .mobile-menu-toggle:hover { border-color: var(--cyan); }
+        .mobile-menu-toggle.active { background: var(--cyan); color: var(--bg-deep); border-color: var(--cyan); }
+        .mobile-nav-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 998;
+        }
+        .mobile-nav-overlay.open { display: block; }
+        .mobile-nav-drawer {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 280px;
+            height: 100vh;
+            background: var(--bg-surface);
+            border-left: 1px solid var(--border);
+            z-index: 999;
+            padding: 80px 24px 24px;
+            transition: right 0.3s var(--ease-out-cubic);
+        }
+        .mobile-nav-drawer.open { right: 0; }
+        .mobile-nav-drawer a {
+            display: block;
+            padding: 16px 0;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 1rem;
+            border-bottom: 1px solid var(--border);
+            transition: color 0.2s;
+        }
+        .mobile-nav-drawer a:hover { color: var(--cyan); }
+        .mobile-nav-drawer a:last-child { border-bottom: none; }
+        .mobile-nav-drawer .mobile-cta {
+            display: block;
+            margin-top: 24px;
+            padding: 12px 20px;
+            background: var(--cyan);
+            color: var(--bg-deep);
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
         /* SECTIONS */
         section { padding: 120px 24px; max-width: 1000px; margin: 0 auto; }
         .section-label {
@@ -542,8 +601,8 @@
         }
         @media (max-width: 768px) {
             nav { padding: 12px 16px; }
-            .nav-links a:not(.nav-cta) { display: none; }
-            .nav-cta { padding: 6px 12px; font-size: 0.75rem; }
+            .nav-links { display: none; }
+            .mobile-menu-toggle { display: flex; align-items: center; justify-content: center; }
             section { padding: 60px 16px; }
             .hero { padding-top: 100px; min-height: auto; padding-bottom: 60px; }
             .ascii-logo { font-size: 0.32rem; margin-bottom: 24px; }
@@ -604,7 +663,16 @@
             <a href="/simulator.html">Simulator</a>
             <a href="/docs.html" class="nav-cta">View Docs →</a>
         </div>
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Open menu">☰</button>
     </nav>
+    <div class="mobile-nav-overlay" id="mobile-nav-overlay"></div>
+    <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+        <a href="#how-it-works">How It Works</a>
+        <a href="#validation">Validation</a>
+        <a href="/engineers.html">For Engineers</a>
+        <a href="/simulator.html">Simulator</a>
+        <a href="/docs.html" class="mobile-cta">View Docs →</a>
+    </div>
 
     <section class="hero">
         <pre class="ascii-logo">
@@ -615,8 +683,9 @@
 ██║ ╚═╝ ██║██████╔╝██║  ██║███████║██║  ██║
 ╚═╝     ╚═╝╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
         </pre>
-        <h1 class="hero-tagline">The data layer that makes AI agent deployments <span class="highlight">insurable</span></h1>
+        <h1 class="hero-tagline">The <span class="highlight">liability layer</span> that makes AI agent deployments insurable</h1>
         <p class="hero-subtitle">Defensible deployment for autonomous AI agents. Cryptographic proof of what agents did, verified against physical reality. Audit-ready from day one.</p>
+        <p class="hero-differentiator" style="font-size: 0.8rem; color: var(--text-dim); margin-top: -32px; margin-bottom: 32px; opacity: 0; animation: fadeInUp 0.5s var(--ease-out-expo) 0.8s forwards;">Context graphs tell you <em>why</em>. Observability tells you <em>what</em>. mdash tells you <span style="color: var(--cyan);">who pays</span>.</p>
         <div class="hero-badges">
             <div class="badge"><span class="badge-dot"></span><span class="badge-label">Tests</span><span class="badge-value">88/88</span></div>
             <div class="badge"><span class="badge-dot"></span><span class="badge-label">Attacks Defended</span><span class="badge-value">20/20</span></div>
@@ -739,6 +808,7 @@
             <div class="validation-row"><div class="validation-label"><span class="validation-name">Attack Vectors Defended</span><span class="validation-value"><span class="count" data-target="20">0</span>/20</span></div><div class="validation-bar"><div class="validation-fill"></div></div><p class="validation-note">Token attribution vulnerability fixed V2.6.0</p></div>
             <div class="validation-row"><div class="validation-label"><span class="validation-name">TLA+ Formal Properties</span><span class="validation-value"><span class="count" data-target="5">0</span>/5</span></div><div class="validation-bar"><div class="validation-fill"></div></div><p class="validation-note">Tamper detection, verification soundness, hash commitment, append-only, determinism</p></div>
         </div>
+        <p data-animate style="margin-top: 24px; padding: 16px 20px; background: var(--bg-surface); border-left: 3px solid var(--orange); font-size: 0.8rem; color: var(--text-muted); line-height: 1.7; opacity: 0; transform: translateY(20px);"><strong style="color: var(--text-bright);">For Insurers:</strong> mdash captures what no context graph can—the <span style="color: var(--cyan);">economic accountability chain</span>. Not just decision traces, but liability traces with quantified risk profiles.</p>
     </section>
 
     <section id="philosophy">
@@ -845,6 +915,41 @@
                 const target = document.querySelector(href);
                 if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
             });
+        });
+
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileNavDrawer = document.getElementById('mobile-nav-drawer');
+        const mobileNavOverlay = document.getElementById('mobile-nav-overlay');
+
+        function openMobileMenu() {
+            mobileNavDrawer.classList.add('open');
+            mobileNavOverlay.classList.add('open');
+            mobileMenuToggle.classList.add('active');
+            mobileMenuToggle.textContent = '✕';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            mobileNavDrawer.classList.remove('open');
+            mobileNavOverlay.classList.remove('open');
+            mobileMenuToggle.classList.remove('active');
+            mobileMenuToggle.textContent = '☰';
+            document.body.style.overflow = '';
+        }
+
+        mobileMenuToggle.addEventListener('click', () => {
+            if (mobileNavDrawer.classList.contains('open')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        });
+
+        mobileNavOverlay.addEventListener('click', closeMobileMenu);
+
+        mobileNavDrawer.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
         });
 
         // Form submission handling

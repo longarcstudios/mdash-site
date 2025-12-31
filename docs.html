@@ -56,7 +56,7 @@
     <div class="docs-layout">
         <aside class="sidebar" id="sidebar">
             <div class="search-box"><input type="text" placeholder="Search docs..." id="search-input"></div>
-            <div class="sidebar-section"><div class="sidebar-title">Getting Started</div><a href="#overview" class="sidebar-link active">Overview</a><a href="#quickstart" class="sidebar-link">Quick Start</a><a href="#installation" class="sidebar-link">Installation</a></div>
+            <div class="sidebar-section"><div class="sidebar-title">Getting Started</div><a href="#overview" class="sidebar-link active">Overview</a><a href="#how-mdash-differs" class="sidebar-link">How mdash Differs <span class="badge new">new</span></a><a href="#quickstart" class="sidebar-link">Quick Start</a><a href="#installation" class="sidebar-link">Installation</a></div>
             <div class="sidebar-section"><div class="sidebar-title">Warrant System</div><a href="#warrant-lifecycle" class="sidebar-link">Warrant Lifecycle</a><a href="#authorization" class="sidebar-link">Authorization</a><a href="#attestation" class="sidebar-link">Attestation</a></div>
             <div class="sidebar-section"><div class="sidebar-title">Physics Engine</div><a href="#physics-overview" class="sidebar-link">Overview</a></div>
             <div class="sidebar-section"><div class="sidebar-title">Checkpoint Surety</div><a href="#token-attribution" class="sidebar-link">Token Attribution <span class="badge new">v2.6</span></a></div>
@@ -76,6 +76,17 @@
                 <div class="info-box"><div class="info-box-title">Core Principle</div><p>Permission is not proof. Logs are self-reported. mdash provides independent verification that agent claims match physical reality.</p></div>
                 <h3>Key Components</h3>
                 <ul><li><strong>Warrant System</strong> — Two-phase authorization/attestation lifecycle</li><li><strong>Physics Engine</strong> — Validates claims against hardware constraints</li><li><strong>Checkpoint Surety</strong> — Hash-chained audit trail with token attribution</li><li><strong>Sealed Context</strong> — Procedural invariants at governance layer</li></ul>
+            </section>
+            <section class="doc-section" id="how-mdash-differs">
+                <h2>How mdash Differs</h2>
+                <p>mdash operates at the <strong>liability layer</strong>—a distinct layer in the AI infrastructure stack that no other tool addresses.</p>
+                <h3>vs. Memory Layers (Mem0, Supermemory)</h3>
+                <p>Memory layers store conversation history and user preferences. mdash stores <strong>warrants</strong>—cryptographic proofs of what an agent was authorized to do and attestations of what it actually did. Memory is about continuity. mdash is about <em>accountability</em>.</p>
+                <h3>vs. Observability (Arize, LangSmith)</h3>
+                <p>Observability captures execution traces: inputs, outputs, latency, token usage. mdash captures <strong>liability traces</strong>: who authorized the action, what constraints applied, whether the outcome matched intent, and who bears economic responsibility. Observability helps you debug. mdash helps you <em>defend</em>.</p>
+                <h3>vs. Context Graphs (PlayerZero)</h3>
+                <p>Context graphs capture decision traces—why code changes were made, what precedents existed, which exceptions were approved. mdash captures <strong>liability graphs</strong>—who pays when an agent's authorized action causes economic harm. Context graphs are for engineering confidence. mdash is for <em>insurance underwriting</em>.</p>
+                <div class="info-box"><div class="info-box-title">The Distinction</div><p>Other tools tell you what happened and why. mdash tells you <strong>who pays</strong>.</p></div>
             </section>
             <section class="doc-section" id="quickstart">
                 <h2>Quick Start</h2>
