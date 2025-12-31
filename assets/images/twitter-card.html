@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            width: 1200px;
+            height: 600px;
+            background: #0A0A0F;
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        
+        .glow-orb {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+            top: -100px;
+            right: -100px;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 64px;
+            font-weight: 700;
+            color: #00D4FF;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 40px rgba(0, 212, 255, 0.5);
+        }
+        
+        .logo::before {
+            content: '[ ';
+            color: #6B6B7B;
+        }
+        
+        .logo::after {
+            content: ' ]';
+            color: #6B6B7B;
+        }
+        
+        .tagline {
+            font-size: 24px;
+            font-weight: 600;
+            color: #FFFFFF;
+            margin-bottom: 16px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        
+        .description {
+            font-size: 16px;
+            color: #6B6B7B;
+            max-width: 600px;
+        }
+        
+        .footer {
+            position: absolute;
+            bottom: 30px;
+            font-size: 14px;
+            color: #3A3A4A;
+        }
+    </style>
+</head>
+<body>
+    <div class="glow-orb"></div>
+    
+    <div class="content">
+        <div class="logo">mdash</div>
+        <div class="tagline">Operating System for Agency</div>
+        <div class="description">
+            Liability infrastructure for autonomous AI agents.
+        </div>
+    </div>
+    
+    <div class="footer">mdash.sh</div>
+</body>
+</html>

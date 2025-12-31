@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Determinism Isn't Dead — mdash</title>
+    <meta name="description" content="For engineers who miss rigor. Determinism didn't die—it moved up the stack. Structural guarantees for non-deterministic systems.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mdash.sh/engineers.html">
+    <meta property="og:title" content="Determinism Isn't Dead — mdash">
+    <meta property="og:description" content="For engineers who miss rigor. Structural guarantees at the governance layer.">
+    <meta property="og:image" content="https://mdash.sh/assets/images/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Determinism Isn't Dead — mdash">
+    <meta name="twitter:description" content="For engineers who miss rigor.">
+    <meta name="twitter:image" content="https://mdash.sh/assets/images/twitter-card.png">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root{--bg-deep:#0A0A0F;--bg-surface:#12121A;--bg-elevated:#1A1A24;--border:#1E1E2E;--cyan:#00D4FF;--cyan-glow:rgba(0,212,255,0.15);--orange:#FF6B35;--teal:#4ECDC4;--pass:#00FF88;--text-bright:#FFF;--text-primary:#E0E0E0;--text-muted:#6B6B7B;--text-dim:#3A3A4A;--font-mono:'JetBrains Mono','Fira Code',monospace;--ease-out-expo:cubic-bezier(0.16,1,0.3,1)}
+        *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:var(--font-mono);background:var(--bg-deep);color:var(--text-primary);font-size:15px;line-height:1.8}::selection{background:var(--cyan);color:var(--bg-deep)}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px;background:rgba(10,10,15,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+        .nav-logo{color:var(--cyan);font-weight:700;font-size:1.1rem;text-decoration:none;display:flex;align-items:center;gap:8px}.nav-logo::before{content:'▸'}
+        .nav-links{display:flex;gap:32px;align-items:center}.nav-links a{color:var(--text-muted);text-decoration:none;font-size:0.85rem;transition:color .2s}.nav-links a:hover,.nav-links a.active{color:var(--cyan)}
+        .nav-cta{padding:8px 16px;border:1px solid var(--cyan);color:var(--cyan)!important;transition:all .25s}.nav-cta:hover{background:var(--cyan);color:var(--bg-deep)!important}
+        .manifesto{max-width:720px;margin:0 auto;padding:140px 24px 80px}
+        .manifesto-header{margin-bottom:64px;animation:fadeIn .6s var(--ease-out-expo) forwards}
+        .manifesto-label{font-size:.7rem;letter-spacing:.2em;color:var(--cyan);text-transform:uppercase;margin-bottom:24px}
+        .manifesto-title{font-size:clamp(1.8rem,5vw,2.5rem);color:var(--text-bright);font-weight:700;line-height:1.2;margin-bottom:24px}.manifesto-title .highlight{color:var(--cyan)}
+        .manifesto-subtitle{font-size:1.1rem;color:var(--text-muted);line-height:1.7}
+        .manifesto-content{animation:fadeIn .6s var(--ease-out-expo) .2s forwards;opacity:0}
+        .manifesto-content p{margin-bottom:24px;color:var(--text-primary)}.manifesto-content p.muted{color:var(--text-muted)}.manifesto-content strong{color:var(--text-bright)}.manifesto-content em{color:var(--cyan);font-style:normal}
+        .manifesto-section{margin:64px 0}.manifesto-section h2{font-size:1.2rem;color:var(--text-bright);margin-bottom:24px;display:flex;align-items:center;gap:12px}.manifesto-section h2::before{content:'▸';color:var(--cyan)}
+        .code-block{background:var(--bg-surface);border:1px solid var(--border);padding:24px;margin:32px 0;overflow-x:auto;font-size:.85rem;line-height:1.7}
+        .code-block .comment{color:var(--text-dim)}.code-block .keyword{color:var(--orange)}.code-block .string{color:var(--teal)}.code-block .function{color:var(--cyan)}.code-block .property{color:var(--text-primary)}
+        .guarantee-list{list-style:none;margin:32px 0}.guarantee-list li{padding:16px 0;border-bottom:1px solid var(--border);display:flex;gap:16px;align-items:flex-start}.guarantee-list li:last-child{border-bottom:none}
+        .guarantee-icon{color:var(--cyan);font-size:1.2rem;flex-shrink:0}
+        .guarantee-content h3{font-size:.9rem;color:var(--text-bright);margin-bottom:4px}.guarantee-content p{font-size:.85rem;color:var(--text-muted);margin:0}
+        .callout{background:var(--bg-surface);border-left:3px solid var(--cyan);padding:24px;margin:32px 0}.callout p{margin:0;color:var(--text-muted)}.callout strong{color:var(--text-bright)}
+        .manifesto-cta{margin-top:64px;padding-top:48px;border-top:1px solid var(--border);text-align:center}.manifesto-cta p{color:var(--text-muted);margin-bottom:24px}
+        .cta-buttons{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+        .cta-button{padding:12px 32px;font-family:var(--font-mono);font-size:.85rem;text-decoration:none;transition:all .3s}
+        .cta-button.primary{background:var(--cyan);color:var(--bg-deep);border:1px solid var(--cyan);font-weight:600}.cta-button.primary:hover{box-shadow:0 0 30px var(--cyan-glow);transform:translateY(-2px)}
+        .cta-button.secondary{background:transparent;color:var(--text-primary);border:1px solid var(--border)}.cta-button.secondary:hover{border-color:var(--cyan);color:var(--cyan)}
+        footer{border-top:1px solid var(--border);padding:48px 24px;max-width:720px;margin:0 auto}
+        .footer-content{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px}.footer-logo{color:var(--cyan);font-weight:600;text-decoration:none}
+        .footer-links{display:flex;gap:24px}.footer-links a{color:var(--text-muted);text-decoration:none;font-size:.8rem;transition:color .2s}.footer-links a:hover{color:var(--cyan)}.footer-meta{font-size:.75rem;color:var(--text-dim)}
+        @media(max-width:768px){nav{padding:12px 16px}.nav-links a:not(.nav-cta){display:none}.manifesto{padding:120px 16px 60px}.manifesto-title{font-size:1.6rem}.cta-buttons{flex-direction:column;align-items:center}.cta-button{width:100%;max-width:280px;text-align:center}.footer-content{flex-direction:column;text-align:center}}
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/" class="nav-logo">mdash</a>
+        <div class="nav-links">
+            <a href="/#how-it-works">How It Works</a>
+            <a href="/engineers.html" class="active">For Engineers</a>
+            <a href="/simulator.html">Simulator</a>
+            <a href="/docs.html" class="nav-cta">View Docs →</a>
+        </div>
+    </nav>
+
+    <article class="manifesto">
+        <header class="manifesto-header">
+            <p class="manifesto-label">▸ A Manifesto for Engineers</p>
+            <h1 class="manifesto-title">Determinism <span class="highlight">Isn't Dead</span></h1>
+            <p class="manifesto-subtitle">It just moved up the stack.</p>
+        </header>
+
+        <div class="manifesto-content">
+            <p>You learned that good systems are predictable. You wrote tests. You valued reproducibility. You distrusted magic.</p>
+            <p class="muted">Then agents happened.</p>
+            <p>Now you're watching junior devs ship systems where the same input produces different outputs. Where "it works" means "it worked that one time." Where the answer to "why did it do that?" is <em>"I don't know, but it seemed helpful."</em></p>
+            <p><strong>You're not wrong to be uncomfortable. Your instincts are correct.</strong></p>
+            <p>But here's what's also true: you can't unit test emergent behavior. You can't mock a model's reasoning. The agent layer is fundamentally non-deterministic.</p>
+
+            <section class="manifesto-section">
+                <h2>So where does determinism go?</h2>
+                <p>It moves up. To the governance layer.</p>
+                <p>You can't control what the agent thinks. But you can control:</p>
+                <ul class="guarantee-list">
+                    <li><span class="guarantee-icon">◉</span><div class="guarantee-content"><h3>What it's allowed to do</h3><p>Warrants declare intent and constraints before execution. Policy is code.</p></div></li>
+                    <li><span class="guarantee-icon">◎</span><div class="guarantee-content"><h3>What it claims it did</h3><p>Attestation seals outcomes with cryptographic proof. Claims are verifiable.</p></div></li>
+                    <li><span class="guarantee-icon">⚡</span><div class="guarantee-content"><h3>Whether that claim is physically possible</h3><p>Physics validation checks against hardware reality. Lies are mathematically detectable.</p></div></li>
+                    <li><span class="guarantee-icon">⛓</span><div class="guarantee-content"><h3>Who's responsible for what</h3><p>Token attribution distinguishes agent decisions from environment responses.</p></div></li>
+                </ul>
+            </section>
+
+            <section class="manifesto-section">
+                <h2>The Sealed Context Architecture</h2>
+                <p>The vulnerability isn't in the agent's "goals"—it's in the context window. If an attacker can inject content, they can influence behavior.</p>
+                <p>mdash seals context at every layer:</p>
+                <div class="code-block">
+<span class="comment">// System context: signed by operator, immutable mid-session</span>
+<span class="keyword">const</span> system = <span class="function">seal</span>({
+  <span class="property">policy</span>: policyConfig,
+  <span class="property">constraints</span>: operatorConstraints
+}, operatorKey);
+
+<span class="comment">// Warrant context: per-action, hash-chained</span>
+<span class="keyword">const</span> warrant = <span class="function">authorize</span>({
+  <span class="property">intent</span>: <span class="string">"transfer_funds"</span>,
+  <span class="property">ceiling</span>: <span class="string">500.00</span>,
+  <span class="property">prev_hash</span>: lastWarrant.hash
+});
+
+<span class="comment">// Tool responses: hashed on receipt, source-attributed</span>
+<span class="keyword">const</span> response = <span class="function">attributeResponse</span>({
+  <span class="property">content</span>: toolOutput,
+  <span class="property">source</span>: <span class="string">"stripe_api"</span>,
+  <span class="property">type</span>: <span class="string">"env"</span>  <span class="comment">// never "system"</span>
+});
+                </div>
+                <p>The chaos is contained. The audit trail is deterministic. The proofs are mathematical.</p>
+            </section>
+
+            <section class="manifesto-section">
+                <h2>What this means for you</h2>
+                <p class="muted">Your skills aren't obsolete. They're misallocated.</p>
+                <p>You've been trying to apply rigor at the agent layer, where it can't stick. mdash lets you apply it where it can:</p>
+                <div class="callout"><p><strong>The warrant system is a state machine.</strong> You can formally verify it.</p></div>
+                <div class="callout"><p><strong>Physics validation isn't AI.</strong> It's constraint checking against hardware specs.</p></div>
+                <div class="callout"><p><strong>Hash chains are deterministic.</strong> Same inputs, same outputs, every time.</p></div>
+                <p>We're not asking you to trust the model. <em>We're asking you to trust the math.</em></p>
+            </section>
+
+            <section class="manifesto-section">
+                <h2>Defensible deployment</h2>
+                <p>The word isn't "safe." Safe implies nothing bad can happen. That's not realistic with autonomous systems.</p>
+                <p>The word is <strong>defensible</strong>.</p>
+                <p>When something goes wrong—and something will—you can prove what the agent was authorized to do, what it actually did, whether the claim was physically possible, and who or what influenced each decision.</p>
+                <p>That's what lets you deploy agents without getting fired. That's what lets you sleep at night.</p>
+            </section>
+
+            <div class="manifesto-cta">
+                <p>Determinism isn't dead. It just moved to where it can actually work.</p>
+                <div class="cta-buttons">
+                    <a href="/docs.html" class="cta-button primary">Read the Docs</a>
+                    <a href="/simulator.html" class="cta-button secondary">Try Simulator</a>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <footer>
+        <div class="footer-content">
+            <a href="/" class="footer-logo">▸ mdash</a>
+            <div class="footer-links">
+                <a href="/docs.html">Documentation</a>
+                <a href="/simulator.html">Simulator</a>
+                <a href="/changelog.html">Changelog</a>
+            </div>
+            <p class="footer-meta">V2.7.0 · Long Arc Studios</p>
+        </div>
+    </footer>
+</body>
+</html>

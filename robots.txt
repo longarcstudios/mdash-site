@@ -1,0 +1,11 @@
+# mdash - Liability Infrastructure for AI Agents
+# https://mdash.sh
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://mdash.sh/sitemap.xml
+
+# Crawl-delay (optional, be nice to servers)
+Crawl-delay: 1

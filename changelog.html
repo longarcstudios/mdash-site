@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Changelog — mdash</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="Changelog — mdash">
+    <meta name="description" content="Version history and release notes for mdash - Liability Infrastructure for AI Agents.">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mdash.sh/changelog.html">
+    <meta property="og:title" content="Changelog — mdash">
+    <meta property="og:description" content="Version history and release notes for mdash.">
+    <meta property="og:image" content="https://mdash.sh/assets/images/og-image.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Changelog — mdash">
+    <meta name="twitter:image" content="https://mdash.sh/assets/images/twitter-card.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --cyan: #00D4FF;
+            --cyan-dim: rgba(0, 212, 255, 0.6);
+            --cyan-glow: rgba(0, 212, 255, 0.15);
+            --orange: #FF6B35;
+            --orange-glow: rgba(255, 107, 53, 0.15);
+            --teal: #4ECDC4;
+            --pass: #00FF88;
+            --fail: #FF3366;
+            --warn: #FFB800;
+            --bg-deep: #0A0A0F;
+            --bg-surface: #12121A;
+            --bg-elevated: #1A1A24;
+            --border: #1E1E2E;
+            --border-bright: #2A2A3A;
+            --text-bright: #FFFFFF;
+            --text-primary: #E0E0E0;
+            --text-muted: #6B6B7B;
+            --text-dim: #3A3A4A;
+            --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', monospace;
+            --ease-out-cubic: cubic-bezier(0.33, 1, 0.68, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 14px;
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--cyan);
+            text-decoration: none;
+            text-shadow: 0 0 20px var(--cyan-glow);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s var(--ease-out-cubic);
+        }
+
+        .nav-links a:hover {
+            color: var(--cyan);
+        }
+
+        .nav-links a.active {
+            color: var(--cyan);
+        }
+
+        .nav-cta {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            font-family: inherit;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s var(--ease-out-cubic);
+        }
+
+        .nav-cta:hover {
+            background: var(--cyan);
+            color: var(--bg-deep);
+            box-shadow: 0 0 20px var(--cyan-glow);
+        }
+
+        /* Main Content */
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 120px 32px 80px;
+        }
+
+        /* Header */
+        .page-header {
+            margin-bottom: 64px;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-bright);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .page-title::before {
+            content: '◈';
+            color: var(--cyan);
+        }
+
+        .page-description {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            max-width: 600px;
+        }
+
+        /* Version Entry */
+        .version-entry {
+            position: relative;
+            padding-left: 32px;
+            margin-bottom: 48px;
+        }
+
+        .version-entry::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 32px;
+            bottom: -32px;
+            width: 1px;
+            background: var(--border);
+        }
+
+        .version-entry:last-child::before {
+            display: none;
+        }
+
+        .version-marker {
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--bg-surface);
+            border: 2px solid var(--cyan);
+            box-shadow: 0 0 10px var(--cyan-glow);
+        }
+
+        .version-entry.latest .version-marker {
+            background: var(--cyan);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 10px var(--cyan-glow); }
+            50% { box-shadow: 0 0 20px var(--cyan-glow), 0 0 30px var(--cyan-glow); }
+        }
+
+        .version-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .version-number {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-bright);
+        }
+
+        .version-date {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .version-tag {
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-radius: 2px;
+        }
+
+        .version-tag.latest {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--pass);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .version-tag.major {
+            background: var(--orange-glow);
+            color: var(--orange);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+        }
+
+        .version-tag.security {
+            background: rgba(255, 51, 102, 0.15);
+            color: var(--fail);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+        }
+
+        .version-content {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            padding: 24px;
+        }
+
+        .version-content:hover {
+            border-color: var(--border-bright);
+        }
+
+        .change-category {
+            margin-bottom: 20px;
+        }
+
+        .change-category:last-child {
+            margin-bottom: 0;
+        }
+
+        .change-category-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .change-category-title.added::before { content: '+'; color: var(--pass); }
+        .change-category-title.changed::before { content: '~'; color: var(--warn); }
+        .change-category-title.fixed::before { content: '✓'; color: var(--cyan); }
+        .change-category-title.removed::before { content: '−'; color: var(--fail); }
+        .change-category-title.security::before { content: '!'; color: var(--fail); }
+
+        .change-list {
+            list-style: none;
+        }
+
+        .change-list li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .change-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--text-dim);
+        }
+
+        .change-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .change-list code {
+            background: var(--bg-elevated);
+            padding: 2px 6px;
+            font-size: 0.85em;
+            color: var(--cyan);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 32px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s var(--ease-out-cubic);
+        }
+
+        .footer-links a:hover {
+            color: var(--cyan);
+        }
+
+        .footer-meta {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .footer-meta a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .footer-meta a:hover {
+            color: var(--cyan);
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            nav {
+                padding: 16px 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            main {
+                padding: 100px 20px 60px;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .version-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .version-content {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 1.25rem;
+            }
+
+            .version-number {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/" class="nav-logo">mdash</a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/docs.html">Documentation</a>
+            <a href="/changelog.html" class="active">Changelog</a>
+            <a href="/docs.html#api-reference" class="nav-cta">API Reference</a>
+        </div>
+    </nav>
+
+    <main>
+        <header class="page-header">
+            <h1 class="page-title">Changelog</h1>
+            <p class="page-description">
+                Version history and release notes for mdash. All notable changes to the liability infrastructure are documented here.
+            </p>
+        </header>
+
+        <!-- V2.7.0 - Latest -->
+        <article class="version-entry latest">
+            <div class="version-marker"></div>
+            <div class="version-header">
+                <span class="version-number">V2.7.0</span>
+                <span class="version-tag latest">Latest</span>
+                <span class="version-date">December 30, 2025</span>
+            </div>
+            <div class="version-content">
+                <div class="change-category">
+                    <h3 class="change-category-title added">Added</h3>
+                    <ul class="change-list">
+                        <li>Comprehensive documentation site with full API reference</li>
+                        <li>Interactive state diagrams for warrant lifecycle visualization</li>
+                        <li>Mobile-responsive design across all pages</li>
+                        <li>Changelog page for version tracking</li>
+                    </ul>
+                </div>
+                <div class="change-category">
+                    <h3 class="change-category-title changed">Changed</h3>
+                    <ul class="change-list">
+                        <li>Improved terminal component animations</li>
+                        <li>Enhanced accessibility with ARIA labels</li>
+                        <li>Optimized asset loading for faster initial render</li>
+                    </ul>
+                </div>
+                <div class="change-category">
+                    <h3 class="change-category-title fixed">Fixed</h3>
+                    <ul class="change-list">
+                        <li>Sidebar scroll behavior on mobile devices</li>
+                        <li>Code block horizontal overflow handling</li>
+                        <li>Navigation link states on docs page</li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+
+        <!-- V2.6.1 -->
+        <article class="version-entry">
+            <div class="version-marker"></div>
+            <div class="version-header">
+                <span class="version-number">V2.6.1</span>
+                <span class="version-date">December 2025</span>
+            </div>
+            <div class="version-content">
+                <div class="change-category">
+                    <h3 class="change-category-title added">Added</h3>
+                    <ul class="change-list">
+                        <li>Checkpoint Surety system with token attribution</li>
+                        <li>Hash-chained attestation records</li>
+                        <li>Documentation for new surety endpoints</li>
+                    </ul>
+                </div>
+                <div class="change-category">
+                    <h3 class="change-category-title changed">Changed</h3>
+                    <ul class="change-list">
+                        <li>Warrant attestation now includes token cost tracking</li>
+                        <li>Improved Physics Engine validation performance</li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+
+        <!-- V2.6.0 -->
+        <article class="version-entry">
+            <div class="version-marker"></div>
+            <div class="version-header">
+                <span class="version-number">V2.6.0</span>
+                <span class="version-tag major">Major</span>
+                <span class="version-date">December 2025</span>
+            </div>
+            <div class="version-content">
+                <div class="change-category">
+                    <h3 class="change-category-title added">Added</h3>
+                    <ul class="change-list">
+                        <li>Physics Engine for hardware reality validation</li>
+                        <li>Counter-PRAXIS procedural invariants</li>
+                        <li>New <code>/warrant/validate</code> endpoint</li>
+                        <li>TLA+ formal verification (5 properties proven)</li>
+                    </ul>
+                </div>
+                <div class="change-category">
+                    <h3 class="change-category-title security">Security</h3>
+                    <ul class="change-list">
+                        <li>Hardened against 20 documented attack vectors</li>
+                        <li>Added cryptographic binding for warrant chains</li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+
+        <!-- V2.5.0 -->
+        <article class="version-entry">
+            <div class="version-marker"></div>
+            <div class="version-header">
+                <span class="version-number">V2.5.0</span>
+                <span class="version-tag major">Major</span>
+                <span class="version-date">November 2025</span>
+            </div>
+            <div class="version-content">
+                <div class="change-category">
+                    <h3 class="change-category-title added">Added</h3>
+                    <ul class="change-list">
+                        <li>Two-Phase Warrant System (Authorization + Attestation)</li>
+                        <li>Warrant lifecycle state machine</li>
+                        <li>Initial API endpoints: <code>/warrant/request</code>, <code>/warrant/attest</code></li>
+                    </ul>
+                </div>
+                <div class="change-category">
+                    <h3 class="change-category-title changed">Changed</h3>
+                    <ul class="change-list">
+                        <li>Complete architecture redesign for agent accountability</li>
+                        <li>Shifted from prevention model to attestation model</li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+
+        <!-- V2.0.0 -->
+        <article class="version-entry">
+            <div class="version-marker"></div>
+            <div class="version-header">
+                <span class="version-number">V2.0.0</span>
+                <span class="version-tag major">Major</span>
+                <span class="version-date">October 2025</span>
+            </div>
+            <div class="version-content">
+                <div class="change-category">
+                    <h3 class="change-category-title added">Added</h3>
+                    <ul class="change-list">
+                        <li>Core liability infrastructure framework</li>
+                        <li>Agent registration and identity system</li>
+                        <li>Cryptographic proof generation primitives</li>
+                        <li>Initial test suite (foundation for 88/88 tests)</li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+
+        <!-- V1.0.0 -->
+        <article class="version-entry">
+            <div class="version-marker"></div>
+            <div class="version-header">
+                <span class="version-number">V1.0.0</span>
+                <span class="version-date">September 2025</span>
+            </div>
+            <div class="version-content">
+                <div class="change-category">
+                    <h3 class="change-category-title added">Added</h3>
+                    <ul class="change-list">
+                        <li>Initial release — "Operating System for Agency" concept</li>
+                        <li>Core philosophy: Governance without control</li>
+                        <li>Foundational architecture design</li>
+                        <li>Long Arc Studios establishes mdash project</li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/docs.html">Documentation</a>
+                <a href="/changelog.html">Changelog</a>
+                <a href="/docs.html#api-reference">API Reference</a>
+            </div>
+            <div class="footer-meta">
+                <p>mdash — Operating System for Agency</p>
+                <p style="margin-top: 8px;">© 2025 <a href="#">Long Arc Studios</a>. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

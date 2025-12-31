@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Documentation — mdash</title>
+    <meta name="description" content="mdash protocol documentation. Warrant system, physics engine, checkpoint surety, and API reference.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mdash.sh/docs.html">
+    <meta property="og:title" content="Documentation — mdash">
+    <meta property="og:description" content="Complete reference for the mdash protocol.">
+    <meta property="og:image" content="https://mdash.sh/assets/images/og-image.png">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root{--bg-deep:#0A0A0F;--bg-surface:#12121A;--bg-elevated:#1A1A24;--border:#1E1E2E;--border-bright:#2A2A3A;--cyan:#00D4FF;--cyan-glow:rgba(0,212,255,0.15);--orange:#FF6B35;--teal:#4ECDC4;--pass:#00FF88;--fail:#FF3366;--warn:#FFB800;--text-bright:#FFF;--text-primary:#E0E0E0;--text-muted:#6B6B7B;--text-dim:#3A3A4A;--font-mono:'JetBrains Mono','Fira Code','SF Mono',monospace;--ease-out-cubic:cubic-bezier(0.33,1,0.68,1)}
+        *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:var(--font-mono);background:var(--bg-deep);color:var(--text-primary);font-size:14px;line-height:1.6;overflow-x:hidden}::selection{background:var(--cyan);color:var(--bg-deep)}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px;background:rgba(10,10,15,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+        .mobile-menu-toggle{display:none;background:none;border:1px solid var(--border);color:var(--text-primary);font-size:1.2rem;cursor:pointer;padding:8px 12px;font-family:var(--font-mono);transition:all .2s;line-height:1}.mobile-menu-toggle:hover{border-color:var(--cyan);color:var(--cyan)}.mobile-menu-toggle.active{background:var(--cyan);color:var(--bg-deep);border-color:var(--cyan)}
+        .nav-left{display:flex;align-items:center;gap:16px}.nav-logo{color:var(--cyan);font-weight:700;font-size:1.1rem;text-decoration:none;display:flex;align-items:center;gap:8px}.nav-logo::before{content:'▸'}.nav-links{display:flex;gap:32px;align-items:center}.nav-links a{color:var(--text-muted);text-decoration:none;font-size:.85rem;transition:color .2s}.nav-links a:hover,.nav-links a.active{color:var(--cyan)}
+        .docs-layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh;padding-top:60px}
+        .sidebar{position:fixed;top:60px;left:0;width:260px;height:calc(100vh - 60px);background:var(--bg-surface);border-right:1px solid var(--border);padding:24px;overflow-y:auto}.sidebar-section{margin-bottom:28px}.sidebar-title{font-size:.7rem;letter-spacing:.15em;color:var(--text-dim);text-transform:uppercase;margin-bottom:12px}.sidebar-link{display:block;padding:8px 12px;margin:2px 0;color:var(--text-muted);text-decoration:none;font-size:.8rem;border-left:2px solid transparent;transition:all .2s}.sidebar-link:hover{color:var(--text-primary);background:var(--bg-elevated)}.sidebar-link.active{color:var(--cyan);border-left-color:var(--cyan);background:var(--bg-elevated)}.badge{display:inline-block;padding:2px 6px;margin-left:8px;font-size:.6rem;background:var(--bg-elevated);border:1px solid var(--border)}.badge.new{border-color:var(--pass);color:var(--pass)}
+        .sidebar-overlay{display:none;position:fixed;top:60px;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:98}
+        .docs-content{margin-left:260px;padding:48px;max-width:900px;animation:fadeIn .4s ease-out}
+        .docs-header{margin-bottom:48px}.docs-breadcrumb{font-size:.75rem;color:var(--text-dim);margin-bottom:16px;display:flex;align-items:center;gap:8px}.docs-breadcrumb a{color:var(--text-muted);text-decoration:none}.docs-breadcrumb a:hover{color:var(--cyan)}.docs-title{font-size:2rem;font-weight:700;color:var(--text-bright);margin-bottom:16px;display:flex;align-items:center;gap:12px}.docs-title::before{content:'◈';color:var(--cyan);animation:pulse 2s ease-in-out infinite}.docs-description{color:var(--text-muted);font-size:.95rem;line-height:1.8}.version-badge{display:inline-flex;align-items:center;gap:8px;padding:4px 12px;background:var(--bg-surface);border:1px solid var(--border);font-size:.75rem;margin-left:12px}.version-dot{width:6px;height:6px;border-radius:50%;background:var(--pass)}
+        .doc-section{margin-bottom:64px}.doc-section h2{font-size:1.25rem;color:var(--text-bright);font-weight:600;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}.doc-section h2::before{content:'▸';color:var(--cyan)}.doc-section h3{font-size:1rem;color:var(--text-primary);font-weight:600;margin:24px 0 12px;display:flex;align-items:center;gap:8px}.doc-section h3::before{content:'›';color:var(--orange)}.doc-section p{margin-bottom:16px;line-height:1.8}.doc-section ul,.doc-section ol{margin:16px 0;padding-left:24px}.doc-section li{margin-bottom:8px;line-height:1.7}.doc-section li::marker{color:var(--cyan)}.doc-section a{color:var(--cyan);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}.doc-section a:hover{border-bottom-color:var(--cyan)}.doc-section strong{color:var(--text-bright)}.doc-section code{background:var(--bg-elevated);padding:2px 6px;color:var(--cyan);font-size:.9em;border:1px solid var(--border);word-break:break-word}.doc-section em{color:var(--text-muted)}
+        .code-block{background:var(--bg-surface);border:1px solid var(--border);margin:24px 0;overflow:hidden}.code-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg-elevated);border-bottom:1px solid var(--border)}.code-lang{font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em}.code-copy{padding:4px 12px;background:transparent;border:1px solid var(--border);color:var(--text-muted);font-family:var(--font-mono);font-size:.7rem;cursor:pointer;transition:all .2s}.code-copy:hover{border-color:var(--cyan);color:var(--cyan)}.code-body{padding:20px;overflow-x:auto;font-size:.8rem;line-height:1.8}.code-body pre{white-space:pre;min-width:min-content}.code-body .comment{color:var(--text-dim)}.code-body .keyword{color:var(--orange)}.code-body .string{color:var(--teal)}.code-body .function{color:var(--cyan)}.code-body .number{color:var(--orange)}.code-body .property{color:var(--text-primary)}
+        .info-box{padding:20px 24px;margin:24px 0;border-left:3px solid var(--cyan);background:var(--bg-surface)}.info-box.warning{border-left-color:var(--warn)}.info-box.danger{border-left-color:var(--fail)}.info-box.success{border-left-color:var(--pass)}.info-box-title{font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;color:var(--cyan)}.info-box.warning .info-box-title{color:var(--warn)}.info-box.danger .info-box-title{color:var(--fail)}.info-box.success .info-box-title{color:var(--pass)}.info-box p{margin:0;color:var(--text-muted)}
+        .table-wrapper{overflow-x:auto;margin:24px 0}.doc-table{width:100%;min-width:500px;border-collapse:collapse;font-size:.8rem}.doc-table th,.doc-table td{padding:12px 16px;text-align:left;border:1px solid var(--border)}.doc-table th{background:var(--bg-elevated);color:var(--text-bright);font-weight:600;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}.doc-table td{background:var(--bg-surface)}.doc-table tr:hover td{background:var(--bg-elevated)}.doc-table code{background:var(--bg-deep);font-size:.75rem}
+        .state-diagram{background:var(--bg-surface);border:1px solid var(--border);padding:32px 16px;margin:24px 0;text-align:center;overflow-x:auto}.state-flow{display:inline-flex;align-items:center;justify-content:center;gap:0;min-width:min-content}.state-node{padding:12px 20px;border:1px solid var(--border);background:var(--bg-elevated);font-size:.75rem;transition:all .2s;white-space:nowrap}.state-node:hover{border-color:var(--cyan)}.state-node.active{border-color:var(--cyan);color:var(--cyan)}.state-arrow{color:var(--text-dim);padding:0 12px;font-size:1rem}
+        .quick-start-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:24px 0}.quick-start-card{padding:24px;background:var(--bg-surface);border:1px solid var(--border);transition:all .2s var(--ease-out-cubic)}.quick-start-card:hover{border-color:var(--cyan);box-shadow:0 0 20px var(--cyan-glow);transform:translateY(-2px)}.quick-start-card h4{color:var(--text-bright);font-size:.9rem;margin-bottom:8px;display:flex;align-items:center;gap:8px}.quick-start-card h4::before{content:'▌';color:var(--cyan)}.quick-start-card p{color:var(--text-muted);font-size:.8rem;margin:0}.quick-start-card .card-link{display:inline-block;margin-top:12px;color:var(--cyan);text-decoration:none;font-size:.75rem}.quick-start-card .card-link:hover{text-decoration:underline}
+        .docs-footer{margin-top:64px;padding-top:32px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}.docs-footer-nav{display:flex;gap:24px}.docs-footer-link{color:var(--text-muted);text-decoration:none;font-size:.8rem;display:flex;align-items:center;gap:8px;transition:color .2s}.docs-footer-link:hover{color:var(--cyan)}.docs-footer-link.prev::before{content:'←'}.docs-footer-link.next::after{content:'→'}.docs-footer-meta{font-size:.75rem;color:var(--text-dim)}
+        .search-box{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg-elevated);border:1px solid var(--border);margin-bottom:24px}.search-box::before{content:'⌕';color:var(--text-dim)}.search-box input{flex:1;background:transparent;border:none;color:var(--text-primary);font-family:var(--font-mono);font-size:.8rem;outline:none;min-width:0}.search-box input::placeholder{color:var(--text-dim)}.search-box:focus-within{border-color:var(--cyan)}
+        @media(max-width:900px){.mobile-menu-toggle{display:block}.nav-links{display:none}.docs-layout{grid-template-columns:1fr}.sidebar{position:fixed;top:60px;left:0;width:280px;max-width:85vw;height:calc(100vh - 60px);transform:translateX(-100%);transition:transform .3s var(--ease-out-cubic);z-index:99}.sidebar.open{transform:translateX(0)}.sidebar-overlay.open{display:block}.docs-content{margin-left:0;padding:24px 16px;max-width:100%;width:100%}}
+        @media(max-width:600px){nav{padding:12px 16px}.nav-logo{font-size:1rem}.docs-title{font-size:1.4rem;flex-direction:column;align-items:flex-start;gap:8px}.version-badge{margin-left:0}.docs-description{font-size:.85rem}.quick-start-grid{grid-template-columns:1fr}.quick-start-card{padding:16px}.quick-start-card h4{font-size:.85rem}.state-diagram{padding:20px 12px}.state-node{padding:10px 14px;font-size:.7rem}.state-arrow{padding:0 8px;font-size:.9rem}.info-box{padding:16px}.code-body{padding:16px;font-size:.75rem}.doc-section h2{font-size:1.1rem}.doc-section h3{font-size:.95rem}.doc-section p,.doc-section li{font-size:.85rem}.docs-footer{flex-direction:column;text-align:center}.docs-footer-nav{justify-content:center}}
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-left">
+            <button class="mobile-menu-toggle" id="menu-toggle" aria-label="Toggle menu">☰</button>
+            <a href="/" class="nav-logo">mdash</a>
+        </div>
+        <div class="nav-links">
+            <a href="/#how-it-works">How It Works</a>
+            <a href="/#validation">Validation</a>
+            <a href="/simulator.html">Simulator</a>
+            <a href="/docs.html" class="active">Docs</a>
+        </div>
+    </nav>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <div class="docs-layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="search-box"><input type="text" placeholder="Search docs..." id="search-input"></div>
+            <div class="sidebar-section"><div class="sidebar-title">Getting Started</div><a href="#overview" class="sidebar-link active">Overview</a><a href="#quickstart" class="sidebar-link">Quick Start</a><a href="#installation" class="sidebar-link">Installation</a></div>
+            <div class="sidebar-section"><div class="sidebar-title">Warrant System</div><a href="#warrant-lifecycle" class="sidebar-link">Warrant Lifecycle</a><a href="#authorization" class="sidebar-link">Authorization</a><a href="#attestation" class="sidebar-link">Attestation</a></div>
+            <div class="sidebar-section"><div class="sidebar-title">Physics Engine</div><a href="#physics-overview" class="sidebar-link">Overview</a></div>
+            <div class="sidebar-section"><div class="sidebar-title">Checkpoint Surety</div><a href="#token-attribution" class="sidebar-link">Token Attribution <span class="badge new">v2.6</span></a></div>
+            <div class="sidebar-section"><div class="sidebar-title">API Reference</div><a href="#api-warrant" class="sidebar-link">Warrant API</a></div>
+            <div class="sidebar-section"><div class="sidebar-title">Security</div><a href="#attack-vectors" class="sidebar-link">Attack Vectors</a></div>
+            <div class="sidebar-section"><div class="sidebar-title">Resources</div><a href="/simulator.html" class="sidebar-link">Interactive Simulator</a><a href="/changelog.html" class="sidebar-link">Changelog</a></div>
+        </aside>
+        <main class="docs-content">
+            <header class="docs-header">
+                <div class="docs-breadcrumb"><a href="/">mdash</a><span>/</span><span>Documentation</span></div>
+                <h1 class="docs-title">Documentation<span class="version-badge"><span class="version-dot"></span>V2.7.0</span></h1>
+                <p class="docs-description">Complete reference for the mdash protocol. Learn how to implement liability infrastructure for autonomous AI agents with cryptographic proof of sanctioned operation.</p>
+            </header>
+            <section class="doc-section" id="overview">
+                <h2>Overview</h2>
+                <p>mdash provides <strong>governance without control</strong>—a liability infrastructure layer that creates cryptographic proof of agent behavior without restricting agent capabilities. Instead of preventing agents from acting, mdash proves what they did.</p>
+                <div class="info-box"><div class="info-box-title">Core Principle</div><p>Permission is not proof. Logs are self-reported. mdash provides independent verification that agent claims match physical reality.</p></div>
+                <h3>Key Components</h3>
+                <ul><li><strong>Warrant System</strong> — Two-phase authorization/attestation lifecycle</li><li><strong>Physics Engine</strong> — Validates claims against hardware constraints</li><li><strong>Checkpoint Surety</strong> — Hash-chained audit trail with token attribution</li><li><strong>Sealed Context</strong> — Procedural invariants at governance layer</li></ul>
+            </section>
+            <section class="doc-section" id="quickstart">
+                <h2>Quick Start</h2>
+                <div class="quick-start-grid">
+                    <div class="quick-start-card"><h4>Authorize a Warrant</h4><p>Request permission before executing an action with defined constraints.</p><a href="#authorization" class="card-link">Learn more →</a></div>
+                    <div class="quick-start-card"><h4>Attest Completion</h4><p>Seal the warrant with outcome data after action execution.</p><a href="#attestation" class="card-link">Learn more →</a></div>
+                    <div class="quick-start-card"><h4>Validate Physics</h4><p>Ensure claimed operations are physically possible.</p><a href="#physics-overview" class="card-link">Learn more →</a></div>
+                    <div class="quick-start-card"><h4>Audit Trail</h4><p>Review hash-chained records with token attribution.</p><a href="#token-attribution" class="card-link">Learn more →</a></div>
+                </div>
+                <h3>Minimal Example</h3>
+                <div class="code-block"><div class="code-header"><span class="code-lang">TypeScript</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div><div class="code-body"><pre><span class="keyword">import</span> { <span class="function">Kernel</span> } <span class="keyword">from</span> <span class="string">'@mdash/core'</span>;
+
+<span class="keyword">const</span> kernel = <span class="keyword">new</span> <span class="function">Kernel</span>({ <span class="property">physics</span>: <span class="keyword">true</span>, <span class="property">checkpoints</span>: <span class="keyword">true</span> });
+
+<span class="comment">// Phase 1: Authorize</span>
+<span class="keyword">const</span> warrant = <span class="keyword">await</span> kernel.<span class="function">authorize</span>({
+  <span class="property">intent</span>: <span class="string">'transfer_funds'</span>,
+  <span class="property">ceiling</span>: <span class="number">500.00</span>,
+  <span class="property">ttl</span>: <span class="number">300</span>
+});
+
+<span class="comment">// Execute action...</span>
+<span class="keyword">const</span> result = <span class="keyword">await</span> <span class="function">executeTransfer</span>(warrant);
+
+<span class="comment">// Phase 2: Attest</span>
+<span class="keyword">const</span> sealed = <span class="keyword">await</span> kernel.<span class="function">attest</span>(warrant, {
+  <span class="property">amount</span>: result.<span class="property">amount</span>,
+  <span class="property">duration_ms</span>: result.<span class="property">duration</span>
+});
+
+console.<span class="function">log</span>(sealed.<span class="property">state</span>); <span class="comment">// 'ATTESTED'</span></pre></div></div>
+            </section>
+            <section class="doc-section" id="installation">
+                <h2>Installation</h2>
+                <h3>Package Manager</h3>
+                <div class="code-block"><div class="code-header"><span class="code-lang">Shell</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div><div class="code-body"><pre><span class="comment"># npm</span>
+npm install @mdash/core @mdash/physics @mdash/checkpoint
+
+<span class="comment"># yarn</span>
+yarn add @mdash/core @mdash/physics @mdash/checkpoint</pre></div></div>
+                <h3>Requirements</h3>
+                <ul><li>Node.js 18+ or Bun 1.0+</li><li>TypeScript 5.0+ (recommended)</li><li>PostgreSQL 14+ (for checkpoint persistence)</li></ul>
+            </section>
+            <section class="doc-section" id="warrant-lifecycle">
+                <h2>Warrant Lifecycle</h2>
+                <p>Every agent action flows through a two-phase warrant system. Authorization establishes intent and constraints <em>before</em> execution. Attestation seals the outcome <em>after</em>.</p>
+                <div class="state-diagram"><div class="state-flow"><div class="state-node">PENDING</div><div class="state-arrow">→</div><div class="state-node active">AUTHORIZED</div><div class="state-arrow">→</div><div class="state-node">ATTESTED</div></div></div>
+                <div class="table-wrapper"><table class="doc-table"><thead><tr><th>State</th><th>Description</th><th>Transitions</th></tr></thead><tbody><tr><td><code>PENDING</code></td><td>Warrant requested, awaiting policy evaluation</td><td>→ AUTHORIZED, → REJECTED</td></tr><tr><td><code>AUTHORIZED</code></td><td>Policy passed, action may proceed</td><td>→ ATTESTED, → REVOKED, → EXPIRED</td></tr><tr><td><code>ATTESTED</code></td><td>Action completed, liability shield active</td><td>Terminal state</td></tr></tbody></table></div>
+                <div class="info-box warning"><div class="info-box-title">Important</div><p>Actions executed without a valid warrant have no liability protection. Always verify warrant state before proceeding.</p></div>
+            </section>
+            <section class="doc-section" id="authorization">
+                <h2>Authorization</h2>
+                <p>The authorization phase evaluates the agent's declared intent against configured policies and establishes operational constraints.</p>
+                <h3>Request Parameters</h3>
+                <div class="table-wrapper"><table class="doc-table"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>intent</code></td><td>string</td><td>Yes</td><td>Declared action type</td></tr><tr><td><code>ceiling</code></td><td>number</td><td>No</td><td>Maximum value constraint</td></tr><tr><td><code>ttl</code></td><td>number</td><td>No</td><td>Time-to-live in seconds</td></tr><tr><td><code>metadata</code></td><td>object</td><td>No</td><td>Additional context</td></tr></tbody></table></div>
+            </section>
+            <section class="doc-section" id="attestation">
+                <h2>Attestation</h2>
+                <p>Attestation seals the warrant with actual outcome data, triggering physics validation and creating the final audit record.</p>
+                <div class="info-box success"><div class="info-box-title">Liability Shield</div><p>Once a warrant reaches ATTESTED state with valid physics, the action is cryptographically proven to have operated within sanctioned parameters.</p></div>
+            </section>
+            <section class="doc-section" id="physics-overview">
+                <h2>Physics Engine</h2>
+                <p>The physics engine validates that claimed outcomes are physically possible given hardware constraints. This catches agents that lie about their operations.</p>
+                <h3>Built-in Validators</h3>
+                <ul><li><strong>Bandwidth</strong> — Data transfer vs. network capacity and time</li><li><strong>Latency</strong> — Operation duration vs. minimum possible time</li><li><strong>Storage</strong> — Bytes written vs. disk throughput</li><li><strong>Compute</strong> — Operations performed vs. CPU cycles available</li></ul>
+            </section>
+            <section class="doc-section" id="token-attribution">
+                <h2>Token Attribution</h2>
+                <p>Token attribution distinguishes between agent decisions and environment responses in the audit trail. This is critical for liability assignment.</p>
+                <div class="info-box"><div class="info-box-title">V2.6.0 Update</div><p>Token attribution vulnerability fixed. All token boundaries are now cryptographically sealed at checkpoint creation.</p></div>
+                <div class="table-wrapper"><table class="doc-table"><thead><tr><th>Token Type</th><th>Source</th><th>Liability</th></tr></thead><tbody><tr><td><code>agent</code></td><td>Agent's own reasoning</td><td>Agent bears responsibility</td></tr><tr><td><code>env</code></td><td>Environment responses</td><td>Environment/tool provider</td></tr><tr><td><code>system</code></td><td>mdash kernel ops</td><td>Infrastructure</td></tr></tbody></table></div>
+            </section>
+            <section class="doc-section" id="api-warrant">
+                <h2>Warrant API Reference</h2>
+                <h3>kernel.authorize(params)</h3><p>Request authorization for an intended action.</p>
+                <h3>kernel.attest(warrant, outcome)</h3><p>Seal a warrant with actual outcome data.</p>
+                <h3>kernel.revoke(warrantId, reason)</h3><p>Invalidate a warrant before attestation.</p>
+                <h3>kernel.query(warrantId)</h3><p>Retrieve warrant state and history.</p>
+            </section>
+            <section class="doc-section" id="attack-vectors">
+                <h2>Attack Vectors</h2>
+                <p>mdash defends against 20 documented attack vectors. All attacks have been tested and validated as of V2.7.0.</p>
+                <div class="table-wrapper"><table class="doc-table"><thead><tr><th>Attack</th><th>Vector</th><th>Defense</th></tr></thead><tbody><tr><td>Replay</td><td>Reuse valid warrant</td><td>Single-use nonces</td></tr><tr><td>Forgery</td><td>Create fake warrant</td><td>Cryptographic signatures</td></tr><tr><td>Tampering</td><td>Modify after creation</td><td>Hash chains</td></tr><tr><td>Physics bypass</td><td>Claim impossible outcomes</td><td>Hardware validation</td></tr><tr><td>Token injection</td><td>Misattribute tokens</td><td>Sealed boundaries (v2.6)</td></tr></tbody></table></div>
+                <div class="info-box danger"><div class="info-box-title">Security Notice</div><p>Report security vulnerabilities to security@mdash.sh. Do not disclose publicly until patch is released.</p></div>
+            </section>
+            <footer class="docs-footer">
+                <div class="docs-footer-nav"><a href="/" class="docs-footer-link prev">Back to Home</a><a href="/simulator.html" class="docs-footer-link next">Try Simulator</a></div>
+                <p class="docs-footer-meta">Last updated: December 2025 · V2.7.0</p>
+            </footer>
+        </main>
+    </div>
+    <script>
+        const menuToggle=document.getElementById('menu-toggle'),sidebar=document.getElementById('sidebar'),overlay=document.getElementById('sidebar-overlay');function closeMobileMenu(){sidebar.classList.remove('open');overlay.classList.remove('open');menuToggle.classList.remove('active');menuToggle.textContent='☰'}function openMobileMenu(){sidebar.classList.add('open');overlay.classList.add('open');menuToggle.classList.add('active');menuToggle.textContent='✕'}menuToggle.addEventListener('click',()=>{sidebar.classList.contains('open')?closeMobileMenu():openMobileMenu()});overlay.addEventListener('click',closeMobileMenu);document.querySelectorAll('.sidebar-link').forEach(link=>{link.addEventListener('click',()=>{window.innerWidth<=900&&closeMobileMenu()})});const sidebarLinks=document.querySelectorAll('.sidebar-link'),sections=document.querySelectorAll('.doc-section'),observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){sidebarLinks.forEach(link=>link.classList.remove('active'));const activeLink=document.querySelector(`.sidebar-link[href="#${entry.target.id}"]`);activeLink&&activeLink.classList.add('active')}})},{rootMargin:'-20% 0px -70% 0px'});sections.forEach(section=>observer.observe(section));function copyCode(btn){const code=btn.closest('.code-block').querySelector('pre').textContent;navigator.clipboard.writeText(code);btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',2000)}document.querySelectorAll('a[href^="#"]').forEach(anchor=>{anchor.addEventListener('click',function(e){const href=this.getAttribute('href');if(href==='#')return;const target=document.querySelector(href);target&&(e.preventDefault(),target.scrollIntoView({behavior:'smooth',block:'start'}))})});const searchInput=document.getElementById('search-input');searchInput.addEventListener('input',e=>{const query=e.target.value.toLowerCase();sidebarLinks.forEach(link=>{const text=link.textContent.toLowerCase();link.style.display=text.includes(query)?'block':'none'})});
+    </script>
+</body>
+</html>

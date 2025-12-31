@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warrant Flow Simulator — mdash</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    
+    <!-- Meta -->
+    <meta name="title" content="Warrant Flow Simulator — mdash">
+    <meta name="description" content="Interactive demonstration of mdash warrant lifecycle and attack detection.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --cyan: #00D4FF;
+            --cyan-dim: rgba(0, 212, 255, 0.6);
+            --cyan-glow: rgba(0, 212, 255, 0.15);
+            --orange: #FF6B35;
+            --orange-glow: rgba(255, 107, 53, 0.15);
+            --teal: #4ECDC4;
+            --pass: #00FF88;
+            --pass-glow: rgba(0, 255, 136, 0.15);
+            --fail: #FF3366;
+            --fail-glow: rgba(255, 51, 102, 0.15);
+            --warn: #FFB800;
+            --warn-glow: rgba(255, 184, 0, 0.15);
+            --bg-deep: #0A0A0F;
+            --bg-surface: #12121A;
+            --bg-elevated: #1A1A24;
+            --border: #1E1E2E;
+            --border-bright: #2A2A3A;
+            --text-bright: #FFFFFF;
+            --text-primary: #E0E0E0;
+            --text-muted: #6B6B7B;
+            --text-dim: #3A3A4A;
+            --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', monospace;
+            --ease-out-cubic: cubic-bezier(0.33, 1, 0.68, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 14px;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--cyan);
+            text-decoration: none;
+            text-shadow: 0 0 20px var(--cyan-glow);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover, .nav-links a.active { color: var(--cyan); }
+
+        main {
+            padding: 100px 32px 48px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-bright);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .page-title::before { content: '◈'; color: var(--cyan); }
+
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: var(--pass-glow);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            font-size: 0.7rem;
+            color: var(--pass);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .live-dot {
+            width: 6px; height: 6px;
+            background: var(--pass);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .header-actions { display: flex; gap: 12px; }
+
+        .btn {
+            padding: 10px 20px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            border: 1px solid var(--border);
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: var(--cyan);
+            border-color: var(--cyan);
+            color: var(--bg-deep);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 20px var(--cyan-glow);
+            color: var(--bg-deep);
+        }
+
+        /* State Flow */
+        .state-flow {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            padding: 24px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+        }
+
+        .state-flow-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-dim);
+            margin-bottom: 20px;
+        }
+
+        .state-diagram {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 600px;
+            padding: 8px 0;
+        }
+
+        .state-node {
+            padding: 10px 16px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .state-node.active {
+            border-color: var(--cyan);
+            color: var(--cyan);
+            box-shadow: 0 0 20px var(--cyan-glow);
+        }
+
+        .state-node.completed {
+            border-color: var(--pass);
+            color: var(--pass);
+        }
+
+        .state-arrow { color: var(--text-dim); font-size: 1rem; flex-shrink: 0; }
+        .state-arrow.active { color: var(--cyan); }
+
+        .failure-states {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-left: 12px;
+        }
+
+        .failure-state {
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            padding: 4px 8px;
+            border: 1px dashed var(--border);
+            white-space: nowrap;
+        }
+
+        .failure-state.active {
+            border-color: var(--fail);
+            color: var(--fail);
+            border-style: solid;
+        }
+
+        /* Grid */
+        .simulator-grid {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 24px;
+        }
+
+        @media (max-width: 1100px) {
+            .simulator-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Panels */
+        .panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-elevated);
+        }
+
+        .panel-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-title::before { content: '▸'; color: var(--cyan); }
+
+        .panel-body { padding: 16px 20px; }
+
+        /* Warrant List */
+        .warrant-list {
+            max-height: 280px;
+            overflow-y: auto;
+        }
+
+        .warrant-item {
+            display: grid;
+            grid-template-columns: 20px 90px 1fr 80px;
+            gap: 12px;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .warrant-item:hover {
+            background: var(--bg-elevated);
+            margin: 0 -20px;
+            padding: 12px 20px;
+        }
+
+        .warrant-item:last-child { border-bottom: none; }
+
+        .warrant-item.selected {
+            background: var(--bg-elevated);
+            margin: 0 -20px;
+            padding: 12px 20px;
+            border-left: 2px solid var(--cyan);
+        }
+
+        .warrant-status-icon {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .warrant-status-icon.request { background: var(--text-dim); }
+        .warrant-status-icon.authorized { background: var(--warn); }
+        .warrant-status-icon.active { background: var(--cyan); animation: pulse 1.5s ease-in-out infinite; }
+        .warrant-status-icon.attested { background: var(--teal); }
+        .warrant-status-icon.sealed { background: var(--pass); }
+        .warrant-status-icon.denied, .warrant-status-icon.revoked, .warrant-status-icon.violated { background: var(--fail); }
+
+        .warrant-id {
+            font-weight: 600;
+            color: var(--text-bright);
+            font-size: 0.8rem;
+        }
+
+        .warrant-progress {
+            height: 4px;
+            background: var(--bg-deep);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .warrant-progress-bar {
+            height: 100%;
+            background: var(--cyan);
+            transition: width 0.5s;
+        }
+
+        .warrant-progress-bar.sealed { background: var(--pass); }
+        .warrant-progress-bar.failed { background: var(--fail); }
+
+        .warrant-state {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-align: right;
+        }
+
+        .warrant-state.request { color: var(--text-dim); }
+        .warrant-state.authorized { color: var(--warn); }
+        .warrant-state.active { color: var(--cyan); }
+        .warrant-state.attested { color: var(--teal); }
+        .warrant-state.sealed { color: var(--pass); }
+        .warrant-state.denied, .warrant-state.revoked, .warrant-state.violated { color: var(--fail); }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-dim);
+        }
+
+        /* Attack Buttons */
+        .attack-panel { margin-bottom: 24px; }
+
+        .attack-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .attack-btn {
+            padding: 10px 16px;
+            font-family: inherit;
+            font-size: 0.8rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .attack-btn:hover {
+            border-color: var(--fail);
+            color: var(--fail);
+            box-shadow: 0 0 15px var(--fail-glow);
+        }
+
+        .attack-btn::before { content: '⚠'; font-size: 0.9rem; }
+
+        /* Warrant Detail */
+        .warrant-detail { max-height: 380px; overflow-y: auto; }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .detail-id {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-bright);
+        }
+
+        .detail-state {
+            padding: 4px 10px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border: 1px solid;
+            white-space: nowrap;
+        }
+
+        .detail-state.active { color: var(--cyan); border-color: var(--cyan); background: var(--cyan-glow); }
+        .detail-state.sealed { color: var(--pass); border-color: var(--pass); background: var(--pass-glow); }
+        .detail-state.failed { color: var(--fail); border-color: var(--fail); background: var(--fail-glow); }
+
+        .detail-fields {
+            display: grid;
+            grid-template-columns: 90px 1fr;
+            gap: 6px 12px;
+            margin-bottom: 20px;
+        }
+
+        .detail-label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .detail-value {
+            font-size: 0.8rem;
+            color: var(--text-primary);
+            word-break: break-all;
+        }
+
+        .detail-value.hash { font-size: 0.7rem; color: var(--teal); }
+        .detail-value.scope { color: var(--orange); }
+
+        .audit-log-title {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-dim);
+            margin-bottom: 10px;
+        }
+
+        .audit-log { font-size: 0.75rem; }
+
+        .audit-entry {
+            display: grid;
+            grid-template-columns: 60px 80px 1fr;
+            gap: 8px;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .audit-entry:last-child { border-bottom: none; }
+
+        .audit-time { color: var(--text-dim); font-size: 0.7rem; }
+
+        .audit-action {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .audit-action.request { color: var(--text-muted); }
+        .audit-action.authorized { color: var(--warn); }
+        .audit-action.active { color: var(--cyan); }
+        .audit-action.attested { color: var(--teal); }
+        .audit-action.sealed { color: var(--pass); }
+        .audit-action.denied, .audit-action.revoked, .audit-action.violated { color: var(--fail); }
+
+        .audit-message { color: var(--text-muted); }
+
+        .no-selection {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-dim);
+        }
+
+        .no-selection-icon { font-size: 2rem; margin-bottom: 12px; opacity: 0.5; }
+
+        /* Event Log */
+        .event-log { margin-top: 24px; }
+        .event-log .panel-body { padding: 0; max-height: 180px; overflow-y: auto; }
+
+        .log-entry {
+            display: grid;
+            grid-template-columns: 65px 55px 1fr;
+            gap: 12px;
+            padding: 10px 20px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.8rem;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .log-entry:last-child { border-bottom: none; }
+
+        .log-time { color: var(--text-dim); font-size: 0.7rem; }
+
+        .log-level {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .log-level.info { color: var(--cyan); }
+        .log-level.pass { color: var(--pass); }
+        .log-level.warn { color: var(--warn); }
+        .log-level.block { color: var(--fail); }
+
+        .log-message { color: var(--text-primary); }
+
+        /* Footer */
+        footer {
+            margin-top: 48px;
+            padding: 24px 32px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .footer-text { font-size: 0.75rem; color: var(--text-dim); }
+        .footer-text a { color: var(--text-muted); text-decoration: none; }
+        .footer-text a:hover { color: var(--cyan); }
+
+        /* Mobile */
+        @media (max-width: 900px) {
+            nav { padding: 16px 20px; }
+            .nav-links { display: none; }
+            main { padding: 90px 16px 32px; }
+            .page-header { flex-direction: column; }
+            .header-actions { width: 100%; }
+            .header-actions .btn { flex: 1; justify-content: center; }
+            .attack-buttons { flex-direction: column; }
+            .attack-btn { width: 100%; justify-content: center; }
+        }
+
+        @media (max-width: 600px) {
+            .page-title { font-size: 1.1rem; }
+            .state-node { padding: 8px 10px; font-size: 0.6rem; }
+            .log-entry { grid-template-columns: 50px 45px 1fr; gap: 8px; padding: 8px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/" class="nav-logo">mdash</a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/docs.html">Documentation</a>
+            <a href="/changelog.html">Changelog</a>
+            <a href="/simulator.html" class="active">Simulator</a>
+        </div>
+    </nav>
+
+    <main>
+        <header class="page-header">
+            <div>
+                <h1 class="page-title">
+                    Warrant Flow Simulator
+                    <span class="live-badge"><span class="live-dot"></span>Live</span>
+                </h1>
+            </div>
+            <div class="header-actions">
+                <button class="btn" id="resetBtn">Reset</button>
+                <button class="btn btn-primary" id="newWarrantBtn">+ New Warrant</button>
+            </div>
+        </header>
+
+        <section class="state-flow">
+            <div class="state-flow-title">Warrant Lifecycle</div>
+            <div class="state-diagram" id="stateDiagram">
+                <div class="state-node" data-state="request">Request</div>
+                <span class="state-arrow">→</span>
+                <div class="state-node" data-state="authorized">Authorized</div>
+                <span class="state-arrow">→</span>
+                <div class="state-node" data-state="active">Active</div>
+                <span class="state-arrow">→</span>
+                <div class="state-node" data-state="attested">Attested</div>
+                <span class="state-arrow">→</span>
+                <div class="state-node" data-state="sealed">Sealed</div>
+                <div class="failure-states">
+                    <div class="failure-state" data-state="denied">Denied</div>
+                    <div class="failure-state" data-state="revoked">Revoked</div>
+                    <div class="failure-state" data-state="violated">Violated</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="attack-panel panel">
+            <div class="panel-header">
+                <span class="panel-title">Attack Simulation</span>
+            </div>
+            <div class="panel-body">
+                <div class="attack-buttons">
+                    <button class="attack-btn" id="attackReplay">Replay Attack</button>
+                    <button class="attack-btn" id="attackInjection">Prompt Injection</button>
+                    <button class="attack-btn" id="attackEscalation">Scope Escalation</button>
+                    <button class="attack-btn" id="attackForgery">Forgery Attempt</button>
+                </div>
+            </div>
+        </section>
+
+        <div class="simulator-grid">
+            <div>
+                <section class="panel">
+                    <div class="panel-header">
+                        <span class="panel-title">Active Warrants</span>
+                        <span id="warrantCount" style="font-size: 0.7rem; color: var(--text-dim);">0 warrants</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="warrant-list" id="warrantList">
+                            <div class="empty-state">
+                                <p>No active warrants</p>
+                                <p style="margin-top: 8px; font-size: 0.8rem;">Click "+ New Warrant" to begin</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="event-log panel">
+                    <div class="panel-header">
+                        <span class="panel-title">Event Log</span>
+                        <button class="btn" id="clearLogBtn" style="padding: 4px 8px; font-size: 0.65rem;">Clear</button>
+                    </div>
+                    <div class="panel-body" id="eventLog">
+                        <div class="log-entry">
+                            <span class="log-time">--:--:--</span>
+                            <span class="log-level info">INFO</span>
+                            <span class="log-message">Simulator ready.</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <span class="panel-title">Warrant Detail</span>
+                </div>
+                <div class="panel-body warrant-detail" id="warrantDetail">
+                    <div class="no-selection">
+                        <div class="no-selection-icon">◇</div>
+                        <p>Select a warrant to view details</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p class="footer-text">
+            <a href="/">mdash</a> — Operating System for Agency
+            <span style="margin: 0 12px;">|</span>
+            <a href="/docs.html">Documentation</a>
+        </p>
+    </footer>
+
+    <script>
+    (function() {
+        // State
+        var warrants = {};
+        var warrantOrder = [];
+        var selectedWarrantId = null;
+        var logEntries = [];
+
+        // Constants
+        var STATES = ['request', 'authorized', 'active', 'attested', 'sealed'];
+        var FAILURE_STATES = ['denied', 'revoked', 'violated', 'expired'];
+        var STATE_PROGRESS = { request: 10, authorized: 30, active: 60, attested: 85, sealed: 100 };
+        var AGENTS = ['agent-alpha', 'agent-beta', 'agent-gamma', 'agent-delta', 'agent-omega'];
+        var SCOPES = ['file:read:/data/*', 'api:call:external', 'db:write:/users', 'net:request:*.api.com', 'compute:execute:sandbox'];
+
+        // DOM Elements
+        var warrantListEl, warrantCountEl, warrantDetailEl, eventLogEl, stateDiagramEl;
+
+        // Helpers
+        function generateId() {
+            var chars = '0123456789abcdef';
+            var id = 'WRT-';
+            for (var i = 0; i < 4; i++) id += chars[Math.floor(Math.random() * chars.length)];
+            return id;
+        }
+
+        function generateHash() {
+            var chars = '0123456789abcdef';
+            var hash = '0x';
+            for (var i = 0; i < 64; i++) hash += chars[Math.floor(Math.random() * chars.length)];
+            return hash;
+        }
+
+        function getTime() {
+            return new Date().toTimeString().slice(0, 8);
+        }
+
+        function rand(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function isFailed(state) {
+            return FAILURE_STATES.indexOf(state) !== -1;
+        }
+
+        // Core Functions
+        function createWarrant(opts) {
+            opts = opts || {};
+            var id = opts.id || generateId();
+            var agent = opts.agent || AGENTS[rand(0, AGENTS.length - 1)];
+            var now = new Date();
+
+            var w = {
+                id: id,
+                agent: agent,
+                scope: opts.scope || SCOPES[rand(0, SCOPES.length - 1)],
+                state: 'request',
+                progress: 10,
+                hash: null,
+                tokenCost: rand(500, 3000),
+                timestamps: { requested: now.toISOString() },
+                expiresAt: new Date(now.getTime() + 600000).toISOString(),
+                auditLog: [{ time: getTime(), action: 'request', message: 'Warrant requested by ' + agent }]
+            };
+
+            warrants[id] = w;
+            warrantOrder.push(id);
+            return w;
+        }
+
+        function transition(id, state) {
+            var w = warrants[id];
+            if (!w) return;
+
+            w.state = state;
+            w.progress = STATE_PROGRESS[state] || 100;
+            w.timestamps[state] = new Date().toISOString();
+
+            var msg = {
+                authorized: 'Scope validated, warrant issued',
+                active: 'Agent began operation',
+                attested: 'Post-action attestation submitted',
+                sealed: 'Record sealed. Hash: ' + (w.hash = generateHash()).slice(0, 12) + '...',
+                denied: 'Authorization denied',
+                revoked: 'Warrant revoked',
+                violated: 'Attestation failed - scope violated'
+            }[state] || '';
+
+            w.auditLog.push({ time: getTime(), action: state, message: msg });
+            render();
+            updateDiagram(state);
+        }
+
+        function progress(id) {
+            var w = warrants[id];
+            if (!w || isFailed(w.state)) return;
+
+            var idx = STATES.indexOf(w.state);
+            if (idx >= STATES.length - 1) return;
+
+            var next = STATES[idx + 1];
+            var delays = { request: [600, 1200], authorized: [800, 1500], active: [1500, 3000], attested: [400, 800] };
+            var d = delays[w.state] || [1000, 1500];
+
+            setTimeout(function() {
+                var curr = warrants[id];
+                if (!curr || isFailed(curr.state)) return;
+
+                transition(id, next);
+
+                if (next === 'sealed') {
+                    addLog('pass', id + ' sealed successfully');
+                } else if (next === 'active') {
+                    addLog('info', id + ' operation in progress');
+                }
+
+                if (next !== 'sealed') progress(id);
+            }, rand(d[0], d[1]));
+        }
+
+        function spawnWarrant(opts) {
+            var w = createWarrant(opts);
+            addLog('info', w.id + ' requested by ' + w.agent);
+            render();
+            selectWarrant(w.id);
+            progress(w.id);
+        }
+
+        function attack(type) {
+            var cfg = {
+                replay: { name: 'Replay Attack', fail: 'revoked', msg: 'Hash mismatch detected', delay: 1200 },
+                injection: { name: 'Prompt Injection', fail: 'denied', msg: 'Forbidden scope pattern', delay: 600, scope: 'file:* ; DROP TABLE users;' },
+                escalation: { name: 'Scope Escalation', fail: 'violated', msg: 'Exceeded authorized scope', delay: 2000, scope: 'admin:*:*' },
+                forgery: { name: 'Forgery Attempt', fail: 'denied', msg: 'Invalid signature', delay: 500, scope: 'system:root:all' }
+            }[type];
+
+            if (!cfg) return;
+
+            var w = createWarrant({ scope: cfg.scope || SCOPES[0] });
+            addLog('warn', cfg.name + ' detected on ' + w.id);
+            render();
+            selectWarrant(w.id);
+
+            setTimeout(function() {
+                if (warrants[w.id]) {
+                    transition(w.id, cfg.fail);
+                    addLog('block', w.id + ' ' + cfg.msg);
+                }
+            }, cfg.delay);
+        }
+
+        function selectWarrant(id) {
+            selectedWarrantId = id;
+            render();
+        }
+
+        function addLog(level, msg) {
+            logEntries.unshift({ time: getTime(), level: level, message: msg });
+            if (logEntries.length > 50) logEntries.length = 50;
+            renderLog();
+        }
+
+        function reset() {
+            warrants = {};
+            warrantOrder = [];
+            selectedWarrantId = null;
+            logEntries = [];
+
+            stateDiagramEl.querySelectorAll('.state-node, .failure-state').forEach(function(n) {
+                n.classList.remove('active', 'completed');
+            });
+            stateDiagramEl.querySelectorAll('.state-arrow').forEach(function(a) {
+                a.classList.remove('active');
+            });
+
+            render();
+            addLog('info', 'Simulator reset');
+        }
+
+        function updateDiagram(state) {
+            stateDiagramEl.querySelectorAll('.state-node').forEach(function(n) { n.classList.remove('active', 'completed'); });
+            stateDiagramEl.querySelectorAll('.state-arrow').forEach(function(a) { a.classList.remove('active'); });
+            stateDiagramEl.querySelectorAll('.failure-state').forEach(function(f) { f.classList.remove('active'); });
+
+            if (isFailed(state)) {
+                var fail = stateDiagramEl.querySelector('[data-state="' + state + '"]');
+                if (fail) fail.classList.add('active');
+            } else {
+                var idx = STATES.indexOf(state);
+                STATES.forEach(function(s, i) {
+                    var node = stateDiagramEl.querySelector('.state-node[data-state="' + s + '"]');
+                    if (node) {
+                        if (i < idx) node.classList.add('completed');
+                        else if (i === idx) node.classList.add('active');
+                    }
+                });
+                var arrows = stateDiagramEl.querySelectorAll('.state-arrow');
+                for (var i = 0; i < idx && i < arrows.length; i++) {
+                    arrows[i].classList.add('active');
+                }
+            }
+        }
+
+        // Rendering
+        function render() {
+            renderList();
+            renderDetail();
+        }
+
+        function renderList() {
+            var count = warrantOrder.length;
+            warrantCountEl.textContent = count + ' warrant' + (count !== 1 ? 's' : '');
+
+            if (count === 0) {
+                warrantListEl.innerHTML = '<div class="empty-state"><p>No active warrants</p><p style="margin-top:8px;font-size:0.8rem">Click "+ New Warrant" to begin</p></div>';
+                return;
+            }
+
+            var html = '';
+            warrantOrder.forEach(function(id) {
+                var w = warrants[id];
+                if (!w) return;
+
+                var failed = isFailed(w.state);
+                var sealed = w.state === 'sealed';
+                var pClass = failed ? 'failed' : (sealed ? 'sealed' : '');
+                var sel = selectedWarrantId === id ? 'selected' : '';
+
+                html += '<div class="warrant-item ' + sel + '" data-id="' + id + '">' +
+                    '<div class="warrant-status-icon ' + w.state + '"></div>' +
+                    '<span class="warrant-id">' + id + '</span>' +
+                    '<div class="warrant-progress"><div class="warrant-progress-bar ' + pClass + '" style="width:' + w.progress + '%"></div></div>' +
+                    '<span class="warrant-state ' + w.state + '">' + w.state + '</span></div>';
+            });
+
+            warrantListEl.innerHTML = html;
+
+            warrantListEl.querySelectorAll('.warrant-item').forEach(function(el) {
+                el.addEventListener('click', function() {
+                    selectWarrant(el.getAttribute('data-id'));
+                });
+            });
+        }
+
+        function renderDetail() {
+            if (!selectedWarrantId || !warrants[selectedWarrantId]) {
+                warrantDetailEl.innerHTML = '<div class="no-selection"><div class="no-selection-icon">◇</div><p>Select a warrant to view details</p></div>';
+                return;
+            }
+
+            var w = warrants[selectedWarrantId];
+            var failed = isFailed(w.state);
+            var sealed = w.state === 'sealed';
+            var sClass = failed ? 'failed' : (sealed ? 'sealed' : 'active');
+
+            var fmt = function(iso) { return iso ? new Date(iso).toLocaleTimeString() : '—'; };
+
+            var html = '<div class="detail-header"><span class="detail-id">' + w.id + '</span><span class="detail-state ' + sClass + '">' + w.state + '</span></div>' +
+                '<div class="detail-fields">' +
+                '<span class="detail-label">Agent</span><span class="detail-value">' + w.agent + '</span>' +
+                '<span class="detail-label">Scope</span><span class="detail-value scope">' + w.scope + '</span>' +
+                '<span class="detail-label">Requested</span><span class="detail-value">' + fmt(w.timestamps.requested) + '</span>' +
+                '<span class="detail-label">Authorized</span><span class="detail-value">' + fmt(w.timestamps.authorized) + '</span>' +
+                '<span class="detail-label">Expires</span><span class="detail-value">' + fmt(w.expiresAt) + '</span>' +
+                '<span class="detail-label">Token Cost</span><span class="detail-value">' + w.tokenCost.toLocaleString() + ' tokens</span>' +
+                '<span class="detail-label">Hash</span><span class="detail-value hash">' + (w.hash || 'Pending...') + '</span></div>' +
+                '<div class="audit-log-title">Audit Log</div><div class="audit-log">';
+
+            w.auditLog.forEach(function(e) {
+                html += '<div class="audit-entry"><span class="audit-time">' + e.time + '</span><span class="audit-action ' + e.action + '">' + e.action + '</span><span class="audit-message">' + e.message + '</span></div>';
+            });
+
+            warrantDetailEl.innerHTML = html + '</div>';
+        }
+
+        function renderLog() {
+            if (logEntries.length === 0) {
+                eventLogEl.innerHTML = '<div class="log-entry"><span class="log-time">--:--:--</span><span class="log-level info">INFO</span><span class="log-message">Simulator ready.</span></div>';
+                return;
+            }
+
+            var html = '';
+            logEntries.forEach(function(e) {
+                html += '<div class="log-entry"><span class="log-time">' + e.time + '</span><span class="log-level ' + e.level + '">' + e.level.toUpperCase() + '</span><span class="log-message">' + e.message + '</span></div>';
+            });
+            eventLogEl.innerHTML = html;
+        }
+
+        // Init
+        function init() {
+            warrantListEl = document.getElementById('warrantList');
+            warrantCountEl = document.getElementById('warrantCount');
+            warrantDetailEl = document.getElementById('warrantDetail');
+            eventLogEl = document.getElementById('eventLog');
+            stateDiagramEl = document.getElementById('stateDiagram');
+
+            document.getElementById('resetBtn').addEventListener('click', reset);
+            document.getElementById('newWarrantBtn').addEventListener('click', function() { spawnWarrant(); });
+            document.getElementById('clearLogBtn').addEventListener('click', function() { logEntries = []; renderLog(); });
+
+            document.getElementById('attackReplay').addEventListener('click', function() { attack('replay'); });
+            document.getElementById('attackInjection').addEventListener('click', function() { attack('injection'); });
+            document.getElementById('attackEscalation').addEventListener('click', function() { attack('escalation'); });
+            document.getElementById('attackForgery').addEventListener('click', function() { attack('forgery'); });
+
+            render();
+            addLog('info', 'Simulator initialized');
+
+            setTimeout(function() { spawnWarrant(); }, 800);
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    })();
+    </script>
+</body>
+</html>
