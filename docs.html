@@ -60,6 +60,7 @@
             <div class="sidebar-section"><div class="sidebar-title">Warrant System</div><a href="#warrant-lifecycle" class="sidebar-link">Warrant Lifecycle</a><a href="#authorization" class="sidebar-link">Authorization</a><a href="#attestation" class="sidebar-link">Attestation</a></div>
             <div class="sidebar-section"><div class="sidebar-title">Physics Engine</div><a href="#physics-overview" class="sidebar-link">Overview</a></div>
             <div class="sidebar-section"><div class="sidebar-title">Checkpoint Surety</div><a href="#token-attribution" class="sidebar-link">Token Attribution <span class="badge new">v2.6</span></a></div>
+            <div class="sidebar-section"><div class="sidebar-title">Influence Constraints</div><a href="#mcca" class="sidebar-link">MCCA Overview <span class="badge new">v2.8</span></a><a href="#influence-budget" class="sidebar-link">Influence Budget</a><a href="#liability-attribution" class="sidebar-link">Liability Attribution</a></div>
             <div class="sidebar-section"><div class="sidebar-title">API Reference</div><a href="#api-warrant" class="sidebar-link">Warrant API</a></div>
             <div class="sidebar-section"><div class="sidebar-title">Security</div><a href="#attack-vectors" class="sidebar-link">Attack Vectors</a></div>
             <div class="sidebar-section"><div class="sidebar-title">Resources</div><a href="/simulator.html" class="sidebar-link">Interactive Simulator</a><a href="/changelog.html" class="sidebar-link">Changelog</a></div>
@@ -67,7 +68,7 @@
         <main class="docs-content">
             <header class="docs-header">
                 <div class="docs-breadcrumb"><a href="/">mdash</a><span>/</span><span>Documentation</span></div>
-                <h1 class="docs-title">Documentation<span class="version-badge"><span class="version-dot"></span>V2.7.0</span></h1>
+                <h1 class="docs-title">Documentation<span class="version-badge"><span class="version-dot"></span>V2.8.0</span></h1>
                 <p class="docs-description">Complete reference for the mdash protocol. Learn how to implement liability infrastructure for autonomous AI agents with cryptographic proof of sanctioned operation.</p>
             </header>
             <section class="doc-section" id="overview">
@@ -163,6 +164,38 @@ yarn add @mdash/core @mdash/physics @mdash/checkpoint</pre></div></div>
                 <div class="info-box"><div class="info-box-title">V2.6.0 Update</div><p>Token attribution vulnerability fixed. All token boundaries are now cryptographically sealed at checkpoint creation.</p></div>
                 <div class="table-wrapper"><table class="doc-table"><thead><tr><th>Token Type</th><th>Source</th><th>Liability</th></tr></thead><tbody><tr><td><code>agent</code></td><td>Agent's own reasoning</td><td>Agent bears responsibility</td></tr><tr><td><code>env</code></td><td>Environment responses</td><td>Environment/tool provider</td></tr><tr><td><code>system</code></td><td>mdash kernel ops</td><td>Infrastructure</td></tr></tbody></table></div>
             </section>
+            <section class="doc-section" id="mcca">
+                <h2>Manifold-Constrained Context Architecture (MCCA)</h2>
+                <p>MCCA provides mathematical bounds on AI agent liability through constrained information flow. Instead of preventing attacks, MCCA proves attribution.</p>
+                <h3>The Problem</h3>
+                <p>AI agents process information from multiple sources: system prompts, user inputs, tool outputs, and conversation history. Without constraints, any source can dominate agent decisions—creating <strong>unbounded liability</strong>.</p>
+                <h3>The Solution</h3>
+                <p>MCCA enforces influence budgets that sum to 1.0, ensuring no single source can overwhelm the others:</p>
+                <div class="table-wrapper"><table class="doc-table"><thead><tr><th>Source</th><th>Token Class</th><th>Constraint</th><th>Attack Defended</th></tr></thead><tbody><tr><td>System</td><td><code>sys</code></td><td>≥ 0.40 min</td><td>Goal hijacking</td></tr><tr><td>User</td><td><code>usr</code></td><td>≤ 0.35 max</td><td>Privilege escalation</td></tr><tr><td>Tool Output</td><td><code>env</code></td><td>≤ 0.20 max</td><td>Prompt injection</td></tr><tr><td>Agent History</td><td><code>ast</code></td><td>≤ 0.25 max</td><td>Context overflow</td></tr></tbody></table></div>
+                <div class="info-box"><div class="info-box-title">Core Principle</div><p>"Bounded risk is insurable. Unbounded risk is not." MCCA transforms AI agent liability from unbounded to bounded.</p></div>
+            </section>
+            <section class="doc-section" id="influence-budget">
+                <h2>Influence Budget</h2>
+                <p>The influence budget is a four-component vector that must sum to exactly 1.0. Each component represents the relative influence of its source class on the agent's decision.</p>
+                <div class="code-block"><div class="code-header"><span class="code-lang">TypeScript</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div><div class="code-body"><pre><span class="keyword">interface</span> <span class="function">InfluenceBudget</span> {
+  <span class="property">sys</span>: <span class="keyword">number</span>;  <span class="comment">// ≥ 0.40 (system policy minimum)</span>
+  <span class="property">usr</span>: <span class="keyword">number</span>;  <span class="comment">// ≤ 0.35 (user influence maximum)</span>
+  <span class="property">env</span>: <span class="keyword">number</span>;  <span class="comment">// ≤ 0.20 (tool output maximum)</span>
+  <span class="property">ast</span>: <span class="keyword">number</span>;  <span class="comment">// ≤ 0.25 (agent history maximum)</span>
+}
+
+<span class="comment">// Example valid budget</span>
+<span class="keyword">const</span> budget = { <span class="property">sys</span>: <span class="number">0.45</span>, <span class="property">usr</span>: <span class="number">0.30</span>, <span class="property">env</span>: <span class="number">0.15</span>, <span class="property">ast</span>: <span class="number">0.10</span> };
+<span class="comment">// Sum = 1.0 ✓</span></pre></div></div>
+                <h3>Enforcement Modes</h3>
+                <div class="table-wrapper"><table class="doc-table"><thead><tr><th>Mode</th><th>Behavior</th><th>Environment</th></tr></thead><tbody><tr><td><code>OBSERVE</code></td><td>Log violations, allow action</td><td>Development</td></tr><tr><td><code>ALERT</code></td><td>Log + notify, flag action</td><td>Staging</td></tr><tr><td><code>ENFORCE</code></td><td>Log + reject violating action</td><td>Production</td></tr></tbody></table></div>
+            </section>
+            <section class="doc-section" id="liability-attribution">
+                <h2>Liability Attribution</h2>
+                <p>When constraints are violated, MCCA identifies the responsible party through precise attribution:</p>
+                <div class="table-wrapper"><table class="doc-table"><thead><tr><th>Violation</th><th>Condition</th><th>Primary Liable Party</th></tr></thead><tbody><tr><td>Prompt Injection</td><td><code>env > 0.20</code></td><td>Tool provider (malicious content)</td></tr><tr><td>Policy Failure</td><td><code>sys < 0.40</code></td><td>Operator (weak policy)</td></tr><tr><td>Privilege Escalation</td><td><code>usr > 0.35</code></td><td>User (override attempt)</td></tr><tr><td>Context Overflow</td><td><code>ast > 0.25</code></td><td>Agent/Operator (history mismanagement)</td></tr></tbody></table></div>
+                <div class="info-box success"><div class="info-box-title">Insurance Ready</div><p>MCCA attestations provide the quantitative data insurance carriers need to underwrite AI agent deployments. Each warrant includes the influence budget at decision time.</p></div>
+            </section>
             <section class="doc-section" id="api-warrant">
                 <h2>Warrant API Reference</h2>
                 <h3>kernel.authorize(params)</h3><p>Request authorization for an intended action.</p>
@@ -178,7 +211,7 @@ yarn add @mdash/core @mdash/physics @mdash/checkpoint</pre></div></div>
             </section>
             <footer class="docs-footer">
                 <div class="docs-footer-nav"><a href="/" class="docs-footer-link prev">Back to Home</a><a href="/simulator.html" class="docs-footer-link next">Try Simulator</a></div>
-                <p class="docs-footer-meta">Last updated: December 2025 · V2.7.0</p>
+                <p class="docs-footer-meta">Last updated: January 2026 · V2.8.0</p>
             </footer>
         </main>
     </div>

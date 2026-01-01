@@ -424,12 +424,50 @@
             </p>
         </header>
 
-        <!-- V2.7.0 - Latest -->
+        <!-- V2.8.0 - Latest -->
         <article class="version-entry latest">
             <div class="version-marker"></div>
             <div class="version-header">
-                <span class="version-number">V2.7.0</span>
+                <span class="version-number">V2.8.0</span>
                 <span class="version-tag latest">Latest</span>
+                <span class="version-tag major">Major</span>
+                <span class="version-date">January 1, 2026</span>
+            </div>
+            <div class="version-content">
+                <div class="change-category">
+                    <h3 class="change-category-title added">Added</h3>
+                    <ul class="change-list">
+                        <li>Manifold-Constrained Context Architecture (MCCA) foundation</li>
+                        <li>Influence budget system with four source classes (<code>sys</code>/<code>usr</code>/<code>env</code>/<code>ast</code>)</li>
+                        <li>Constraint validation ensuring bounded liability</li>
+                        <li>Liability attribution matrix mapping violations to responsible parties</li>
+                        <li>37 new tests covering constraint validation and normalization</li>
+                        <li>Unified <code>CLAUDE.md</code> architecture specification</li>
+                    </ul>
+                </div>
+                <div class="change-category">
+                    <h3 class="change-category-title changed">Changed</h3>
+                    <ul class="change-list">
+                        <li>Test count: 88 → 125 total tests passing</li>
+                        <li>Module manifest updated with MCCA module</li>
+                    </ul>
+                </div>
+                <div class="change-category">
+                    <h3 class="change-category-title fixed">Technical</h3>
+                    <ul class="change-list">
+                        <li>TypeScript types: <code>InfluenceBudget</code>, <code>SourceClass</code>, <code>ConstraintViolation</code></li>
+                        <li>Three enforcement modes: <code>OBSERVE</code>, <code>ALERT</code>, <code>ENFORCE</code></li>
+                        <li>Sinkhorn-Knopp inspired normalization for influence budgets</li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+
+        <!-- V2.7.0 -->
+        <article class="version-entry">
+            <div class="version-marker"></div>
+            <div class="version-header">
+                <span class="version-number">V2.7.0</span>
                 <span class="version-date">December 30, 2025</span>
             </div>
             <div class="version-content">
