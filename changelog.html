@@ -424,12 +424,51 @@
             </p>
         </header>
 
-        <!-- V2.8.0 - Latest -->
+        <!-- V2.9.0 - Latest -->
         <article class="version-entry latest">
             <div class="version-marker"></div>
             <div class="version-header">
-                <span class="version-number">V2.8.0</span>
+                <span class="version-number">V2.9.0</span>
                 <span class="version-tag latest">Latest</span>
+                <span class="version-tag major">Major</span>
+                <span class="version-date">January 2, 2026</span>
+            </div>
+            <div class="version-content">
+                <div class="change-category">
+                    <h3 class="change-category-title added">Added</h3>
+                    <ul class="change-list">
+                        <li>Property-based testing with <code>fast-check</code> — Spec-as-Tests paradigm</li>
+                        <li>22 new property tests encoding 7 core liability invariants</li>
+                        <li>Warrant state machine with legal transition validation</li>
+                        <li>Cryptographic rejection proofs with SHA-256 verification</li>
+                        <li>Temporal validity checks for time-bounded authorization</li>
+                        <li>Aggregate influence validation (<code>usr + env + ast ≤ 0.60</code>)</li>
+                    </ul>
+                </div>
+                <div class="change-category">
+                    <h3 class="change-category-title changed">Changed</h3>
+                    <ul class="change-list">
+                        <li>Test count: 125 → 147 total tests passing</li>
+                        <li>Validation API now returns boolean for sum/non-negative checks</li>
+                        <li>Types extended with <code>Warrant</code>, <code>WarrantState</code>, <code>RejectionProof</code></li>
+                    </ul>
+                </div>
+                <div class="change-category">
+                    <h3 class="change-category-title fixed">Technical</h3>
+                    <ul class="change-list">
+                        <li>7 liability invariants now formally tested: Conservation, Non-Negative, Aggregate Bound, State Machine, Rejection Proof, Class Isolation, Temporal Validity</li>
+                        <li>Property tests run 500-1000 random inputs per invariant</li>
+                        <li>Insurers can read test file as specification</li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+
+        <!-- V2.8.0 -->
+        <article class="version-entry">
+            <div class="version-marker"></div>
+            <div class="version-header">
+                <span class="version-number">V2.8.0</span>
                 <span class="version-tag major">Major</span>
                 <span class="version-date">January 1, 2026</span>
             </div>
