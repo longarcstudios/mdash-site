@@ -196,6 +196,13 @@ yarn add @mdash/core @mdash/physics @mdash/checkpoint</pre></div></div>
                 <div class="table-wrapper"><table class="doc-table"><thead><tr><th>Violation</th><th>Condition</th><th>Primary Liable Party</th></tr></thead><tbody><tr><td>Prompt Injection</td><td><code>env > 0.20</code></td><td>Tool provider (malicious content)</td></tr><tr><td>Policy Failure</td><td><code>sys < 0.40</code></td><td>Operator (weak policy)</td></tr><tr><td>Privilege Escalation</td><td><code>usr > 0.35</code></td><td>User (override attempt)</td></tr><tr><td>Context Overflow</td><td><code>ast > 0.25</code></td><td>Agent/Operator (history mismanagement)</td></tr></tbody></table></div>
                 <div class="info-box success"><div class="info-box-title">Insurance Ready</div><p>MCCA attestations provide the quantitative data insurance carriers need to underwrite AI agent deployments. Each warrant includes the influence budget at decision time.</p></div>
             </section>
+            <section class="doc-section" id="theoretical-foundations">
+                <h2>Theoretical Foundations</h2>
+                <h3>Manifold-Constrained Hyper-Connections</h3>
+                <p>MCCA draws directly from DeepSeek's research on Manifold-Constrained Hyper-Connections (mHC), which demonstrates that constraining information flow across network layers enables stable training at scale. We adapt this insight to AI agent governance: by constraining influence flow across context source classes, mdash enables stable operation at deployment scale.<br><small>Reference: arXiv:2512.24880 (December 2025)</small></p>
+                <h3>Constrained Behavior as Lottery Tickets</h3>
+                <p>MIT's Lottery Ticket Hypothesis proved that dense neural networks contain sparse subnetworks ("winning tickets") that achieve equivalent accuracy with 90% fewer parameters. mdash applies an analogous principle to agent behavior: within the space of all possible agent actions, constrained influence budgets identify the "winning ticket" of insurable behavior—preserving utility while bounding liability.<br><small>Reference: arXiv:1803.03635 (Frankle & Carbin, 2019)</small></p>
+            </section>
             <section class="doc-section" id="api-warrant">
                 <h2>Warrant API Reference</h2>
                 <h3>kernel.authorize(params)</h3><p>Request authorization for an intended action.</p>
